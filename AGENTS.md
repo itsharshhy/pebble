@@ -41,9 +41,28 @@ Positioning: **"A prediction tracker for overthinkers. Your brain makes forecast
 | Design tokens | [Design system](docs/handbook/03-design/design-system.md); living preview in `design/preview.html` |
 | Hosting caveat | GitHub Pages on a private repo needs a paid plan ([Deployment](docs/handbook/06-release/deployment.md)) |
 
-## 5. Current status
-- **Phase:** Loop 0 done (repo + handbook + design preview). Next: v0 14-day paper test by the maintainer, then Loop 1 (static Today screen).
-- **Open decisions:** final name ("Pebble" is a working name); when to go public.
+### Cloud sessions (Claude Code on the web): primary way of working
+The maintainer works mainly in **cloud sessions**, which start from a fresh clone of this repo.
+Nothing from earlier local sessions exists there. **This file and the handbook are the only memory.**
+- The Windows-specific rows above (gh.exe path, long paths) apply to local sessions only. Cloud runs Linux.
+- Set the commit identity at the start of every cloud session (noreply address; never a personal email):
+  `git config user.name "itsharshhy"` and `git config user.email "95523979+itsharshhy@users.noreply.github.com"`
+- Push docs changes to `main` as agreed in §3. **If the environment only allows pushing to a branch**, push to a branch and open a pull request, then tell the maintainer in one plain sentence.
+- To preview the app, use the local preview command above, or describe what you changed if no browser is available.
+- **At the end of every session**, update §5 (status) and §6 (decision log) and push, so the next session knows where things stand.
+
+## 5. Current status (update at the end of every session)
+- **Done:** Loop 0 (repo, 37-page handbook, design preview, AGENTS.md/CLAUDE.md).
+- **Next for the maintainer (no code):** v0, the 14-day worry test on paper or phone notes ([Roadmap](docs/handbook/01-planning/roadmap.md#v0-prove-it-no-code)). Suggested, not yet confirmed as started.
+- **Next for code:** Loop 1, a static Today screen in `index.html` + `style.css` with all tokens, matching `design/preview.html` ([Build plan](docs/handbook/04-implementation/build-plan.md)). Only begin when the maintainer asks.
+- **Open decisions:** final name ("Pebble" is a working name); when to go public (needed for free GitHub Pages hosting).
+
+## 5a. How to start any new session (for the agent)
+1. Read this file fully, then [docs/handbook/README.md](docs/handbook/README.md).
+2. Read the handbook pages for the phase you're working in.
+3. Tell the maintainer in 2–3 plain sentences where the project stands (from §5) and what you propose next. Wait for a yes before writing code.
+4. Work in small steps, explaining each one. Push docs immediately; push code once the maintainer has seen it.
+5. Before ending: update §5 and §6, commit, push.
 
 ## 6. Decision log
 | Date | Decision | Why |
@@ -55,9 +74,21 @@ Positioning: **"A prediction tracker for overthinkers. Your brain makes forecast
 | 2026-10-13 | `--sage-deep` (#56705F) added for primary buttons | White on `--sage` measured 2.55:1 (fails WCAG); white on sage-deep is 5.41:1 |
 | 2026-10-13 | Handbook split into one page per topic per SDLC phase (v2.0) | Maintainer request: every aspect gets its own deep page; agents follow it literally |
 | 2026-10-13 | Docs auto-pushed after every change; project memory kept in AGENTS.md | Maintainer standing instruction |
+| 2026-10-13 | v0 (14-day paper test) comes before any code | Proves the loop helps before investing build time; the data decides, not opinions |
+| 2026-10-13 | CLAUDE.md added as a one-line pointer (`@AGENTS.md`); work continues in cloud sessions | Cloud sessions start from a fresh clone, so all context must live in the repo |
 
 ## 7. Research summary (details in the handbook's Science page)
 - Worry Outcome Journal: 91.4% of tracked worries didn't come true (n = 29, GAD; small sample, **don't generalise**).
 - Self-guided mental-health apps have small effects (anxiety g ≈ 0.20, 176 RCTs), so claims stay humble.
 - Venting-only writing can maintain rumination, so every flow ends in a step forward.
-- Market gap (2026-10): closest apps are closed-source iOS; open-source journals don't do outcome tracking.
+- Market gap (researched 2026-10-13):
+
+| Existing | What it does | Gap Pebble fills |
+|---|---|---|
+| Pragma, Worry Watch, Scribble (iOS/Android) | Worry → check outcome later | Closed source, phone-only |
+| decision-journal-electron, decision-diary, muse (GitHub) | Decision → review outcome | About decisions, not fears |
+| Memex, Lotti, ai-journal, Rosebud | AI summarises entries, finds patterns | Never checks whether fears came true |
+| Joplin, Logseq, jrnl, Memos, StoryPad | Write and store | No follow-up loop |
+
+- Honest position: the core loop is a published CBT exercise, not a new invention. The novelty is the combination of open source, local-first, calm design and long-term personal record. Never claim "no one has done this".
+- Audience: everyday non-clinical overthinkers, privacy-conscious journalers, therapy clients with worry-log homework. Not for acute crisis.
