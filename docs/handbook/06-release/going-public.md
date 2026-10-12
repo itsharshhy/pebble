@@ -11,7 +11,7 @@ check everything first.
 - [ ] If anything private is found: **stop**. History must be rewritten *before* going public (ask for help; never improvise this).
 
 ## 2. The front door is ready
-- [ ] README: what, why, "not medical care", privacy promise, how to run, link to the handbook
+- [ ] README: what, why, "not medical care", privacy promise, how to install on each system (including the unsigned-app steps), link to the handbook
 - [ ] LICENSE present (MIT)
 - [ ] `CONTRIBUTING.md` ([Contributing](../07-maintenance/contributing.md))
 - [ ] `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1)
@@ -35,7 +35,7 @@ check everything first.
 ```bash
 gh repo edit itsharshhy/pebble --visibility public --accept-visibility-change-consequences
 ```
-Then enable Pages ([Deployment](deployment.md)).
+Then publish installers as a GitHub Release, with approval ([Deployment](deployment.md)). No website hosting is needed.
 
 ## Done when
 Every box is ticked **and** the maintainer has said, in their own words, "make it public".

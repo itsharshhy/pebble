@@ -66,8 +66,13 @@ them working. See [AGENTS.md](../../../AGENTS.md).
 
 ## Privacy in Git
 - Commits use the GitHub **noreply** email so a personal address never becomes public.
-- Never commit backups or real worries. `.gitignore` blocks `pebble-backup*.json`.
+- Never commit backups or real worries. `.gitignore` blocks `pebble-backup*.json` and `pebble*.json` data files, and `src-tauri/target/` (build output).
 - If something private is ever committed, deleting it in a new commit **does not** remove it from history. Stop and ask for help before pushing.
+
+## Continuous integration
+Every push runs `.github/workflows/ci.yml` (tests, lint, formatting). A red ❌ next to a commit
+on GitHub means "look at the Actions tab before merging". Run the same checks locally first
+([Dev environment](../01-planning/dev-environment.md#5-run-the-checks)).
 
 ## Undo cheatsheet (safe ones)
 | Situation | Command |

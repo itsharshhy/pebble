@@ -1,6 +1,8 @@
 # The Pebble Handbook
 
-The single source of truth for building Pebble, a calm, private prediction tracker for overthinkers.
+The single source of truth for building Pebble, a calm, private prediction tracker for
+overthinkers: a **desktop app for Windows, macOS and Linux**, built with Tauri 2 (Rust) and a
+plain HTML/CSS/JS interface. No website, no server, no account.
 Every page belongs to one phase of the **Software Development Life Cycle (SDLC)**. Anyone working on
 Pebble, human or AI, follows these pages. If the code and the handbook disagree, fix one of them
 in the same change.
@@ -33,7 +35,7 @@ in the same change.
 | [Process model](01-planning/process-model.md) | Our SDLC, the build loop, Definition of Ready and Done |
 | [Roadmap](01-planning/roadmap.md) | Versions v0 to v3, each with exit criteria |
 | [Risk register](01-planning/risk-register.md) | What could go wrong and what we do about it |
-| [Dev environment](01-planning/dev-environment.md) | Tools to install, and how to run Pebble locally |
+| [Dev environment](01-planning/dev-environment.md) | Rust, the Tauri CLI, and how to run and build Pebble |
 
 ### 02 · Requirements: what we build
 | Page | What it answers |
@@ -46,7 +48,7 @@ in the same change.
 ### 03 · Design: how it works and how it feels
 | Page | What it answers |
 |---|---|
-| [Architecture](03-design/architecture.md) | How the pieces fit together |
+| [Architecture](03-design/architecture.md) | The interface, the Rust shell, and how they talk |
 | [Decisions (ADRs)](03-design/decisions.md) | Why we chose what we chose |
 | [Data model](03-design/data-model.md) | What we store and how |
 | [Screens](03-design/screens.md) | Every screen, specified |
@@ -77,7 +79,7 @@ in the same change.
 ### 06 · Release: getting it to people
 | Page | What it answers |
 |---|---|
-| [Deployment](06-release/deployment.md) | Hosting on GitHub Pages |
+| [Deployment](06-release/deployment.md) | Building installers for Windows, macOS and Linux |
 | [Versioning and changelog](06-release/versioning.md) | Version numbers and release notes |
 | [Going public](06-release/going-public.md) | The checklist before the repo becomes public |
 
@@ -96,4 +98,4 @@ in the same change.
 | [Ethics and claims](08-safety-ethics/ethics-and-claims.md) | What we may and may not say |
 
 ---
-*Handbook version 2.0 · last reviewed 2026-10-13*
+*Handbook version 3.0 (desktop app) · last reviewed 2026-10-12*

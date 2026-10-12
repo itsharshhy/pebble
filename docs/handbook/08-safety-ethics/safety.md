@@ -15,11 +15,13 @@ feared" response. Wording ([Content](../03-design/content-and-voice.md)):
 | Region | Resource |
 |---|---|
 | Worldwide | **findahelpline.com**: free directory of helplines by country |
-| India | **Tele-MANAS: 14416** (national mental health helpline, 24/7) |
+| India | **Tele-MANAS: 14416** or 1-800-891-4416 (national mental health helpline, free, 24/7; telemanas.mohfw.gov.in) |
 | Emergency | Local emergency number |
 
 Rules:
 - Verify every number **before each release**. Wrong numbers in a crisis are harm.
+- Verification log: 2026-10-12, Tele-MANAS 14416 confirmed (Ministry of Health and Family Welfare programme, NIMHANS nodal centre); findahelpline.com in use.
+- In the desktop app, the helpline directory opens in the person's own browser; phone numbers are plain text (computers can't dial).
 - Contributors may add their country's verified line via pull request, with a source link.
 - No help links inside notifications or pop-ups. They live calmly in About and the "worse" response.
 

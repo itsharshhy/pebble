@@ -40,12 +40,27 @@ const t = () => new Date().toISOString().slice(0, 10);
 - Booleans read as questions: `isDue`, `hasNextStep`.
 - No global variables except one `app` namespace.
 - **User text: `textContent` only.** ([Privacy and security](../03-design/privacy-security.md))
-- Handle errors where they happen: `try/catch` around `JSON.parse` and `localStorage` calls.
+- Handle errors where they happen: `try/catch` around `JSON.parse` and every storage call (`await` the Rust commands inside `try`).
 - No `console.log` left in committed code (use `console.warn` for real warnings only).
 
+## Rust (`src-tauri/`)
+```rust
+/// Saves the whole document safely. The previous copy is kept as `pebble.previous.json`.
+pub fn save(&self, text: &str) -> Result<(), String> {
+    check_json(text)?;            // `?` returns the error to the caller: no panics, no crashes
+    // ...
+}
+```
+- **Keep Rust small.** It does disk, dialogs, links and the window. Logic about pebbles lives in `ui/js/model.js`.
+- **Never `unwrap()` or `expect()` outside tests and start-up.** Return `Result<_, String>` from commands; the interface shows a calm message.
+- **Every command is narrow.** It takes plain values, checks them, and never accepts a path or URL from the interface (dialogs choose paths; links come from a fixed list).
+- **Doc comments (`///`) on every public item** explain *why*.
+- `cargo fmt` formats; `cargo clippy --all-targets -- -D warnings` must be clean; `cargo test` must pass.
+- New crate = new ADR + a row in [Tech stack](tech-stack.md).
+
 ## Formatting
-- 2-space indentation, single quotes in JS, semicolons on, line length ≤ 100.
-- Prettier in the editor keeps this automatic (editor setting, not a project dependency).
+- JavaScript and CSS: 2-space indentation, single quotes in JS, semicolons on, line length ≤ 100. Prettier in the editor keeps this automatic (editor setting, not a project dependency).
+- Rust: `cargo fmt` (4 spaces, standard style).
 
 ## Review checklist (self or AI review before commit)
 - [ ] Could a beginner explain what this does?
@@ -53,6 +68,8 @@ const t = () => new Date().toISOString().slice(0, 10);
 - [ ] Any hard-coded colour or size? (Use a token.)
 - [ ] Any new string not in `STRINGS`?
 - [ ] Any date compared with `toISOString()`? (Use `todayLocal()`.)
+- [ ] Any new Tauri permission, command or crate? (Needs an ADR.)
+- [ ] `node tests/tests.js`, `cargo test`, `cargo clippy -D warnings`, `cargo fmt --check` all clean?
 - [ ] Handbook page updated if behaviour changed?
 
 ## Done when

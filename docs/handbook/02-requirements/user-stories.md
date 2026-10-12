@@ -43,10 +43,17 @@
 
 ## U6: Own my data · Must · v1
 *As Leo, I want to export and delete everything, so that I'm never locked in.*
-- **When** I choose Export, **then** a file `pebble-backup-YYYY-MM-DD.json` downloads with all data.
-- **When** I choose Import and pick a valid file, **then** I'm shown "This will replace N pebbles with M pebbles" and must confirm.
+- **When** I choose Export, **then** my system's Save dialog opens, suggesting `pebble-backup-YYYY-MM-DD.json`; the file I save contains all data.
+- **When** I choose Import and pick a valid file in my system's Open dialog, **then** I'm shown "This will replace N pebbles with M pebbles" and must confirm.
 - **Given** an invalid file, **then** nothing changes, and a calm message explains.
 - **When** I choose Delete everything, **then** I must type or confirm in a dialog; after that, storage is empty.
+
+## U14: Install and keep it on my computer · Must · v1
+*As Leo, I want to install Pebble like any other app, so that it works offline and my data stays on my machine.*
+- **Given** Windows 10/11, macOS 10.15+ or a common Linux, **then** an installer for my system exists ([Deployment](../06-release/deployment.md)).
+- **When** I open Pebble with no internet, **then** everything works.
+- **When** I quit and reopen, or the computer restarts, **then** every pebble is still there.
+- **Given** the app crashes mid-save, **then** the last complete save is intact (atomic writes).
 
 ## U7: Name the feeling · Should · v1
 *As Asha, I want to optionally pick one feeling word, so that naming it takes the edge off.* ([S4](../00-foundation/science.md#s4))

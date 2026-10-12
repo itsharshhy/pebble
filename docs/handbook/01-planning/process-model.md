@@ -24,7 +24,7 @@ Pebble uses **iterative and incremental** development, the base of Agile practic
 | **3 Design** | Sketch the screen; pick tokens and words | [Screens](../03-design/screens.md), [Design system](../03-design/design-system.md), [Content](../03-design/content-and-voice.md) | Sketch or notes |
 | **4 Build** | Write the code on a branch | [Coding standards](../04-implementation/coding-standards.md), [Git workflow](../04-implementation/git-workflow.md) | Commits |
 | **5 Test** | Checklist, accessibility, Calm Audit | [Testing](../05-testing/test-strategy.md) | Ticked checklist |
-| **6 Ship** | Merge to main and push | [Deployment](../06-release/deployment.md) | Live change |
+| **6 Ship** | Merge to main and push; build installers when releasing | [Deployment](../06-release/deployment.md) | Change on `main` |
 | **7 Reflect** | 5 minutes: what was hard? What would I change? | This page | One line in the Issue |
 
 ## Definition of Ready (before building starts)
@@ -39,7 +39,8 @@ An item is ready when:
 - [ ] The [manual checklist](../05-testing/manual-checklist.md) items affected by the change pass.
 - [ ] The [Calm Audit](../05-testing/calm-audit.md) passes.
 - [ ] Keyboard-only use works.
-- [ ] No new network requests (DevTools → Network).
+- [ ] No new network requests (inspector → Network).
+- [ ] `node tests/tests.js`, `cargo test`, `cargo clippy -D warnings` and `cargo fmt --check` pass (CI is green).
 - [ ] The handbook is updated if behaviour changed.
 - [ ] Committed with a Conventional Commit message and pushed.
 

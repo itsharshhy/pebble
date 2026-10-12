@@ -1,53 +1,66 @@
-# Deployment
-*Phase: Release · Putting Pebble on the web with GitHub Pages.*
+# Deployment: building and sharing installers
+*Phase: Release · Getting Pebble onto people's computers. There's no website to host ([ADR-011](../03-design/decisions.md)).*
 
-## Important fact first
-**GitHub Pages on a private repository requires a paid plan** (GitHub Pro, Team or Enterprise).
-On the free plan, Pages works only for **public** repositories. So before v1 launch, either:
-- **Make the repo public** (follow [Going public](going-public.md) first), or
-- Use a paid plan, or
-- Use another free static host that can deploy from a private repo (e.g. Cloudflare Pages, Netlify). Each needs its own privacy review: no analytics may be enabled.
+## How installers are made
+An installer must be built **on** the system it's for, so GitHub Actions rents one of each.
+| Workflow | Runs when | Does |
+|---|---|---|
+| `.github/workflows/ci.yml` | Every push and pull request | JavaScript tests, Rust tests, `clippy`, `rustfmt` on Linux |
+| `.github/workflows/build.yml` | By hand (**Actions → Build installers → Run workflow**) or when a tag like `v1.0.0` is pushed | Builds installers on Windows, macOS (Apple Silicon + Intel) and Linux, and uploads them as **artifacts** |
 
-Until then, run Pebble locally ([Dev environment](../01-planning/dev-environment.md)).
+## What each system gets
+| System | Files | Notes |
+|---|---|---|
+| **Windows 10/11** | `Pebble_x.y.z_x64-setup.exe` (NSIS), `Pebble_x.y.z_x64_en-US.msi` | If WebView2 is missing (rare on Windows 10), the installer downloads it from Microsoft once, during installation only |
+| **macOS 10.15+** | `Pebble_x.y.z_universal.dmg` | One file for Apple Silicon and Intel |
+| **Linux** | `.AppImage` (runs anywhere), `.deb` (Debian/Ubuntu), `.rpm` (Fedora/openSUSE) | Needs WebKitGTK 4.1; `.deb`/`.rpm` install it automatically |
 
-## Deploy with GitHub Pages (once the repo is public)
-1. GitHub → repo → **Settings → Pages**.
-2. **Source:** Deploy from a branch → Branch: `main` → Folder: `/ (root)` → **Save**.
-3. Wait 1–2 minutes. Pebble goes live at **https://itsharshhy.github.io/pebble/**.
-4. Every push to `main` redeploys automatically.
+## Getting the installers (private repo)
+1. GitHub → **Actions** → **Build installers** → **Run workflow** → `main`.
+2. Wait about 15 to 25 minutes.
+3. Open the finished run → **Artifacts** → download `pebble-windows`, `pebble-macos` or `pebble-linux`.
 
-Or from the terminal:
-```bash
-gh api repos/itsharshhy/pebble/pages -X POST -f "source[branch]=main" -f "source[path]=/"
-```
+Artifacts are visible only to people with access to the repo and are kept 30 days.
 
-## Pre-deploy checklist
-- [ ] [Manual checklist](../05-testing/manual-checklist.md) passed on `main`
+## Code signing: the honest situation
+Unsigned apps work, but the systems warn people the first time:
+| System | What people see | Workaround | Proper fix |
+|---|---|---|---|
+| macOS | "Pebble can't be opened because Apple cannot check it" | Right-click the app → **Open** → **Open** | Apple Developer Program (about USD 99/year) + notarisation |
+| Windows | SmartScreen: "Windows protected your PC" | **More info** → **Run anyway** | A code-signing certificate (yearly cost) |
+| Linux | No warning | — | — |
+
+Signing is a **maintainer decision with a cost** (risk R11). Until then, the README explains the
+workaround in plain words. Never ask people to turn off their system's security entirely.
+
+## Releasing a version (public-facing: needs approval every time)
+1. Pre-release checklist below passes.
+2. Update the version in **three** places: `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `VERSION` in `ui/app.js` ([Versioning](versioning.md)).
+3. Add the `CHANGELOG.md` section. Commit.
+4. Tag and push: `git tag -a v1.0.0 -m "Pebble 1.0.0"` then `git push --tags`. The build workflow runs.
+5. **With the maintainer's explicit approval only:** create a GitHub Release from the tag, attach the installers from the workflow artifacts, paste the changelog section.
+
+## Pre-release checklist
+- [ ] [Manual checklist](../05-testing/manual-checklist.md) passed on **each** system (Windows, macOS, Linux)
 - [ ] Calm Audit recorded for changed screens
-- [ ] Version number updated in About and `CHANGELOG.md` ([Versioning](versioning.md))
-- [ ] No `console.log`, no test data, no TODOs in user-visible text
-- [ ] CSP `<meta>` present
+- [ ] CI green on the release commit
+- [ ] Version matches in all three places and the About screen
+- [ ] No `console.log`, test data or TODOs in user-visible text
+- [ ] CSP in `tauri.conf.json` unchanged (or changed with an ADR)
+- [ ] Help numbers re-verified ([Safety](../08-safety-ethics/safety.md))
 
-## Post-deploy checks (on the live URL)
-- [ ] Loads over HTTPS (GitHub Pages enforces it)
-- [ ] Network tab: same-origin only
-- [ ] Add a test pebble, reload, then delete everything
-- [ ] Lighthouse on the live URL ≥ 95 accessibility
+## Post-install checks (on a real machine)
+- [ ] Installs and opens without a terminal window
+- [ ] Add a test pebble, quit, reopen: it's still there
+- [ ] Export a backup to the Desktop, delete everything, import it: identical
+- [ ] Inspector Network tab (dev build) or a firewall log: zero outside requests
 
 ## Rolling back
-If a release breaks something:
-```bash
-git revert <bad-commit-id>
-```
-```bash
-git push
-```
-Pages redeploys the previous behaviour within minutes. User data is unaffected because it lives in
-their browser, but **schema migrations can't be rolled back automatically**. That's why migrations
-always back up first ([Data model](../03-design/data-model.md#migrations)).
-
-## Custom domain (optional, later)
-A custom domain (e.g. `pebble.app`) costs money yearly and adds DNS setup. Not needed for v1.
+If a release breaks something, revert the commit (`git revert <id>`), tag a PATCH version and
+rebuild. People's data stays in their data folder, and `pebble.previous.json` holds the save
+before the last one. **Schema migrations can't be undone automatically**, which is why
+migrations always back up first ([Data model](../03-design/data-model.md#migrations)).
 
 ## Done when
-The live URL passes the post-deploy checks.
+A person who has never seen the repo can install Pebble from the artifact on their system,
+use it, quit, reopen, and find their pebbles.
