@@ -58,9 +58,10 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 
 ## 5. Current status (update at the end of every session)
 - **Done:** Loop 0 (handbook). Handbook v3.0 rewritten for the desktop app (2026-10-12). Pebble 0.1.0 built: all v1 screens (U1–U9, U13, U14), Tauri 2 shell with atomic file storage, native export/import dialogs, warm premium visual pass with dusk-pond illustrations, CI and installer workflows. Verified on Linux: 24 JS unit tests (4 timezones), 7 Rust tests, clippy and fmt clean, 70 end-to-end browser checks, a release build (`.deb`/`.rpm` 2.45 MB), and the real app saving and reloading `pebble.json`.
-- **Next:** run **Actions → Build installers** once; run the [manual checklist](docs/handbook/05-testing/manual-checklist.md) on Windows and macOS (never tested there yet); Calm Audit records per screen; then usability tests (Build plan loops 7–8).
+- **Released:** v0.1.0 pre-release, 2026-10-12, with installers for Windows, macOS (universal) and Linux built by `build.yml` (all three jobs green): https://github.com/itsharshhy/pebble/releases/tag/v0.1.0
+- **Next:** run the [manual checklist](docs/handbook/05-testing/manual-checklist.md) on Windows and macOS (never tested there yet); Calm Audit records per screen; then usability tests (Build plan loops 7–8).
 - **Open decisions:** final name ("Pebble" is a working name); code signing budget (risk R11); when to go public and publish a release (needs explicit approval).
-- **Not verified yet:** Windows and macOS builds, screen readers inside the app, Lighthouse score.
+- **Not verified yet:** the Windows and macOS apps on real machines (they build; nobody has run them yet), screen readers inside the app, Lighthouse score.
 
 ## 5a. How to start any new session (for the agent)
 1. Read this file fully, then [docs/handbook/README.md](docs/handbook/README.md).
