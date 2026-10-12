@@ -2,7 +2,12 @@
 All notable changes, written for the people who use Pebble. Newest first.
 Format: [Keep a Changelog 1.1.0](https://keepachangelog.com), versions: [SemVer](https://semver.org).
 
-## [0.1.0] - 2026-10-12 (not released yet)
+## [0.1.1] - 2026-10-12
+### Fixed
+- macOS: Pebble now opens on Apple Silicon Macs instead of being reported as "damaged". The app carries a basic (ad-hoc) signature, so macOS shows its normal "Open Anyway" option.
+- Clearer first-launch steps for Windows and macOS in the release notes.
+
+## [0.1.0] - 2026-10-12
 ### Added
 - Pebble as a desktop app for Windows, macOS and Linux.
 - Set a worry down in one line, choose when to look back, and answer "Did it happen?" on that day.

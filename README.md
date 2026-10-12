@@ -21,15 +21,15 @@ mind's forecasts came true.
 🌱 Version 0.1.0, in testing. Not yet released.
 
 ## Install
-Installers are built by GitHub Actions (**Actions → Build installers**) for:
+**Download:** [latest release](https://github.com/itsharshhy/pebble/releases/latest) (built by GitHub Actions) for:
 | System | File |
 |---|---|
 | Windows 10/11 | `Pebble_x.y.z_x64-setup.exe` or `.msi` |
 | macOS 10.15+ (Apple Silicon and Intel) | `Pebble_x.y.z_universal.dmg` |
 | Linux | `.deb` (Ubuntu, Debian), `.rpm` (Fedora), `.AppImage` (anywhere) |
 
-Pebble isn't code-signed yet, so the first launch shows a warning:
-- **macOS:** right-click Pebble in Applications → **Open** → **Open**.
+Pebble isn't code-signed yet, so the first launch shows a warning ([step-by-step help](.github/release-notes.md)):
+- **macOS:** open Pebble once, then System Settings → Privacy & Security → **Open Anyway**.
 - **Windows:** on "Windows protected your PC", choose **More info** → **Run anyway**.
 
 ## Run it from source

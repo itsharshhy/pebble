@@ -1,6 +1,6 @@
 [package]
 name = "pebble"
-version = "0.1.0"
+version = "0.1.1"
 description = "A calm, private place to set worries down."
 authors = ["Pebble contributors"]
 license = "MIT"
