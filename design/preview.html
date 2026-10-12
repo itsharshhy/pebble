@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- No external requests: everything here is local (Handbook §4.3 Privacy). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>Pebble · design preview</title>
+<style>
+  /* ---------- Design tokens (Handbook §5.4) ---------- */
+  :root {
+    --bg: #F6F3EE; --surface: #FFFDF9; --ink: #2F3833; --ink-soft: #5F6963;
+    --sage: #8FA89A; --sage-deep: #56705F; --sage-wash: #E3EBE5; --mist: #DCE5EA; --sand: #EADFCF; --clay: #C9A48E;
+    --shadow: 0 1px 2px rgba(47,56,51,.04), 0 8px 24px rgba(47,56,51,.06);
+    --ease: cubic-bezier(.4,0,.2,1);
+    --font: ui-rounded, "SF Pro Rounded", system-ui, "Segoe UI", sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #1B201F; --surface: #232A28; --ink: #E7E3DB; --ink-soft: #A9B1AB;
+    --sage: #7F9A8B; --sage-deep: #8FAF9C; --sage-wash: #2C3632; --mist: #2A3338; --sand: #3A342C; --clay: #B08E79;
+    --shadow: 0 1px 2px rgba(0,0,0,.2), 0 8px 24px rgba(0,0,0,.25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font: 18px/1.6 var(--font);
+    transition: background .6s var(--ease), color .6s var(--ease);
+  }
+  header.top { max-width: 1100px; margin: 0 auto; padding: 48px 24px 8px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  h1 { font-weight: 600; font-size: 28px; margin: 0; letter-spacing: -.01em; }
+  .sub { color: var(--ink-soft); margin: 4px 0 0; font-size: 16px; }
+  .pill { border: 0; border-radius: 999px; padding: 12px 20px; min-height: 44px; font: inherit; font-size: 16px; cursor: pointer;
+          background: var(--sage-wash); color: var(--ink); transition: transform .2s var(--ease), background .3s var(--ease); }
+  .pill:hover { transform: translateY(-1px); }
+  .pill:focus-visible, button:focus-visible { outline: 3px solid var(--sage); outline-offset: 3px; }
+  .pill.primary { background: var(--sage-deep); color: #fff; } /* 5.4:1 contrast */
+  [data-theme="dark"] .pill.primary { color: #12201a; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 24px; display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .label { font-size: 14px; color: var(--ink-soft); margin: 0 0 12px 8px; }
+
+  /* Phone frame */
+  .phone { background: var(--surface); border-radius: 40px; box-shadow: var(--shadow); padding: 32px 24px; min-height: 600px; display: flex; flex-direction: column; gap: 20px; }
+  .greet { font-size: 26px; font-weight: 600; margin: 8px 0 0; }
+  .muted { color: var(--ink-soft); font-size: 16px; margin: 0; }
+  .card { background: var(--bg); border-radius: 24px; padding: 20px; display: flex; gap: 16px; align-items: center; }
+  .card p { margin: 0; }
+  .stone { width: 44px; height: 36px; flex: none; border-radius: 55% 45% 50% 50% / 60% 55% 45% 40%; background: var(--sage); opacity: .85; }
+  .stone.sand { background: var(--sand); } .stone.mist { background: var(--mist); }
+  /* In the evening palette, sand/mist are too close to the card colour, so lift the stones */
+  [data-theme="dark"] .stone.sand { background: #8C7E6A; }
+  [data-theme="dark"] .stone.mist { background: #6F8590; }
+  .spacer { flex: 1; }
+  nav { display: flex; justify-content: space-around; padding-top: 12px; border-top: 1px solid var(--sage-wash); font-size: 14px; color: var(--ink-soft); }
+  nav span.on { color: var(--ink); font-weight: 600; }
+
+  /* Check-back */
+  .question { font-size: 22px; font-weight: 600; margin: 0; }
+  .quote { background: var(--bg); border-radius: 24px; padding: 24px; font-size: 20px; }
+  .answers { display: grid; gap: 10px; }
+  .answers .pill { text-align: left; background: var(--bg); }
+  .answers .pill.didnt { background: var(--sage-wash); }
+  .answers .pill.happened { background: color-mix(in srgb, var(--clay) 25%, var(--surface)); }
+  .letgo { background: none; border: 0; color: var(--ink-soft); font: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; min-height: 44px; }
+  .closing { text-align: center; color: var(--ink-soft); min-height: 1.6em; margin: 0; transition: opacity .6s var(--ease); }
+
+  /* Breath: 4s in, 6s out = 6 breaths/min, longer exhale (Handbook S5) */
+  .breath-wrap { flex: 1; display: grid; place-items: center; }
+  .breath { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--sage-wash), var(--sage)); animation: breathe 10s var(--ease) infinite; }
+  @keyframes breathe { 0% { transform: scale(.7); } 40% { transform: scale(1.15); } 100% { transform: scale(.7); } }
+  .breath-text::after { content: "Breathe in"; animation: words 10s steps(1) infinite; }
+  @keyframes words { 0% { content: "Breathe in"; } 40% { content: "and slowly out"; } }
+
+  /* Garden */
+  .big { font-size: 44px; font-weight: 600; margin: 0; line-height: 1.1; }
+  .pond { position: relative; height: 200px; border-radius: 32px; background: linear-gradient(180deg, var(--mist), var(--sage-wash)); overflow: hidden; }
+  .pond .stone { position: absolute; }
+  .ripple { position: absolute; left: 50%; top: 45%; width: 20px; height: 8px; border: 2px solid var(--surface); border-radius: 50%; opacity: 0; transform: translate(-50%,-50%); }
+  .ripple.go { animation: ripple 1.2s var(--ease); }
+  @keyframes ripple { from { opacity: .9; width: 20px; height: 8px; } to { opacity: 0; width: 160px; height: 50px; } }
+
+  /* Palette */
+  .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .sw { border-radius: 20px; height: 72px; display: flex; align-items: flex-end; padding: 8px 12px; font-size: 13px; color: var(--ink); box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
+  footer { max-width: 1100px; margin: 0 auto; padding: 24px 24px 64px; color: var(--ink-soft); font-size: 15px; }
+
+  /* Reduced motion: fades only (WCAG 2.3.3) */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: opacity .3s !important; }
+    .breath { transform: scale(1); }
+    .breath-text::after { content: "Take three slow breaths"; }
+  }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Pebble</h1>
+      <p class="sub">Design preview: palette, type, and key screens</p>
+    </div>
+    <button class="pill" id="theme" aria-pressed="false">Evening palette</button>
+  </header>
+
+  <main>
+    <!-- Screen 1: Today -->
+    <section aria-label="Today screen">
+      <p class="label">Today</p>
+      <div class="phone">
+        <p class="greet" id="greet">Good evening</p>
+        <p class="muted">One pebble is ready to look at. No rush.</p>
+        <div class="card"><div class="stone"></div><div><p>The presentation will go badly</p><p class="muted">Ready to check</p></div></div>
+        <div class="card"><div class="stone sand"></div><div><p>They're upset with me</p><p class="muted">Saturday</p></div></div>
+        <div class="card"><div class="stone mist"></div><div><p>I'll miss the deadline</p><p class="muted">Next week</p></div></div>
+        <div class="spacer"></div>
+        <button class="pill primary">Set a pebble down</button>
+        <nav><span class="on">Today</span><span>Garden</span><span>Settings</span></nav>
+      </div>
+    </section>
+
+    <!-- Screen 2: Breath pause -->
+    <section aria-label="Breath pause">
+      <p class="label">Breath pause (optional)</p>
+      <div class="phone">
+        <p class="muted" style="text-align:center">Before we look back</p>
+        <div class="breath-wrap"><div class="breath" aria-hidden="true"></div></div>
+        <p class="question breath-text" style="text-align:center" aria-live="polite"></p>
+        <button class="pill">I'm ready</button>
+        <button class="letgo">Skip</button>
+      </div>
+    </section>
+
+    <!-- Screen 3: Check-back -->
+    <section aria-label="Check-back screen">
+      <p class="label">Check-back</p>
+      <div class="phone">
+        <p class="muted">Three days ago you wrote</p>
+        <div class="quote">"The presentation will go badly"</div>
+        <p class="question">Did it happen?</p>
+        <div class="answers">
+          <button class="pill didnt" data-msg="That one didn't happen. Noted.">It didn't happen</button>
+          <button class="pill" data-msg="Better than you feared. Noted.">Better than I feared</button>
+          <button class="pill happened" data-msg="That happened. That's hard. You got through it.">It happened</button>
+        </div>
+        <button class="letgo" data-msg="Let go. You won't be asked about it again.">Let it go</button>
+        <p class="closing" id="closing" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Screen 4: Garden -->
+    <section aria-label="Garden screen">
+      <p class="label">Garden</p>
+      <div class="phone">
+        <p class="muted">Since you started</p>
+        <p class="big">31 of 34</p>
+        <p class="muted">pebbles you checked didn't happen.</p>
+        <div class="pond" id="pond" aria-hidden="true">
+          <div class="stone" style="left:12%;top:62%"></div>
+          <div class="stone sand" style="left:30%;top:72%;transform:scale(.8)"></div>
+          <div class="stone" style="left:52%;top:66%;transform:scale(1.1)"></div>
+          <div class="stone mist" style="left:72%;top:74%;transform:scale(.7)"></div>
+          <div class="stone sand" style="left:82%;top:58%;transform:scale(.9)"></div>
+          <div class="ripple" id="ripple"></div>
+        </div>
+        <p class="muted">No streaks. No scores. Just a record that's yours.</p>
+        <div class="spacer"></div>
+        <nav><span>Today</span><span class="on">Garden</span><span>Settings</span></nav>
+      </div>
+    </section>
+
+    <!-- Palette -->
+    <section aria-label="Palette">
+      <p class="label">Palette: low saturation, no red</p>
+      <div class="phone" style="min-height:auto">
+        <div class="swatches">
+          <div class="sw" style="background:var(--bg)">bg</div>
+          <div class="sw" style="background:var(--surface)">surface</div>
+          <div class="sw" style="background:var(--sage)">sage</div>
+          <div class="sw" style="background:var(--sage-wash)">sage-wash</div>
+          <div class="sw" style="background:var(--mist)">mist</div>
+          <div class="sw" style="background:var(--sand)">sand</div>
+          <div class="sw" style="background:var(--clay)">clay</div>
+          <div class="sw" style="background:var(--ink);color:var(--bg)">ink</div>
+          <div class="sw" style="background:var(--ink-soft);color:var(--bg)">ink-soft</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Static preview only. Nothing is saved. Turn on "reduce motion" in your system settings to see the calm fallback.
+    Pebble is not medical care. In crisis, find help at findahelpline.com.
+  </footer>
+
+<script>
+  // Time-aware greeting (Handbook §5.4, calm patterns)
+  const h = new Date().getHours();
+  document.getElementById('greet').textContent =
+    h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+
+  // Theme toggle: start from the system preference
+  const btn = document.getElementById('theme');
+  const setTheme = dark => {
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    btn.setAttribute('aria-pressed', dark);
+    btn.textContent = dark ? 'Day palette' : 'Evening palette';
+  };
+  setTheme(matchMedia('(prefers-color-scheme: dark)').matches);
+  btn.addEventListener('click', () => setTheme(document.documentElement.dataset.theme !== 'dark'));
+
+  // Check-back answers show a calm closing line and a ripple in the pond
+  const closing = document.getElementById('closing');
+  const ripple = document.getElementById('ripple');
+  document.querySelectorAll('[data-msg]').forEach(b => b.addEventListener('click', () => {
+    closing.style.opacity = 0;
+    setTimeout(() => { closing.textContent = b.dataset.msg; closing.style.opacity = 1; }, 200);
+    ripple.classList.remove('go'); void ripple.offsetWidth; ripple.classList.add('go');
+  }));
+</script>
+</body>
+</html>

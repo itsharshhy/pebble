@@ -1,0 +1,6 @@
+# Never commit personal data exports or OS clutter
+*.pebble.json
+pebble-export*.json
+.DS_Store
+Thumbs.db
+.vscode/
