@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Pebble",
+  "version": "0.1.0",
+  "identifier": "app.pebble.desktop",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Pebble",
+        "width": 480,
+        "height": 820,
+        "minWidth": 360,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "backgroundColor": "#F7F2EA"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src ipc: http://ipc.localhost; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'",
+      "freezePrototype": true
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Lifestyle",
+    "shortDescription": "A calm, private place to set worries down.",
+    "longDescription": "Write a worry in one line, choose a day to look back, and on that day answer one question: did it happen? Everything stays on this computer.",
+    "copyright": "MIT licence",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

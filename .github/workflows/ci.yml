@@ -1,0 +1,44 @@
+# Checks every push and pull request: JavaScript tests, Rust tests, lint and formatting.
+# See docs/handbook/05-testing/test-strategy.md
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JavaScript tests (dates, validation, Garden maths, words)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          for tz in UTC Asia/Kolkata America/Los_Angeles Pacific/Tongatapu; do
+            echo "Timezone $tz"; TZ=$tz node tests/tests.js
+          done
+
+      - name: Linux libraries Tauri needs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - name: Lint
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings
+      - name: Rust tests (storage)
+        run: cargo test --manifest-path src-tauri/Cargo.toml --locked

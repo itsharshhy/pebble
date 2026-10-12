@@ -1,6 +1,15 @@
-# Never commit personal data exports or OS clutter
-*.pebble.json
+# Never commit personal data: backups and the app's own data files
+pebble-backup*.json
 pebble-export*.json
+*.pebble.json
+pebble.previous.json
+pebble.corrupt.*.json
+
+# Rust and Tauri build output (can be several GB)
+src-tauri/target/
+src-tauri/gen/
+
+# OS and editor clutter
 .DS_Store
 Thumbs.db
 .vscode/
