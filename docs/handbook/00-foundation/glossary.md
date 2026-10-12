@@ -23,12 +23,28 @@
 | **Function** | A named block of code that does one job. |
 | **Variable** | A named box holding a value. |
 | **JSON** | A simple text format for data, readable by people and computers. |
-| **localStorage** | A small storage box in the browser, separate for each website. |
-| **IndexedDB** | A bigger, more robust browser database (planned for v2). |
-| **PWA** | Progressive Web App: a website you can install and use offline. |
-| **Service worker** | A background script that makes offline use possible. |
-| **Framework** | A big pre-built toolkit (e.g. React). We don't use one in v1. |
-| **Dependency** | Someone else's code your project relies on. We have none. |
+| **localStorage** | A small storage box in the browser. Pebble uses it only in the browser preview. |
+| **Framework** | A big pre-built toolkit (e.g. React). We don't use one. |
+| **Dependency** | Someone else's code your project relies on. The interface has none; the Rust shell has a few, each justified. |
+
+## Desktop app
+| Term | Plain meaning |
+|---|---|
+| **Desktop app** | A program you install on Windows, macOS or Linux, rather than a website. |
+| **Tauri** | The toolkit Pebble is built with: a small Rust program that shows an HTML interface in the system's own web view. |
+| **Web view** | The part of the operating system that can draw web pages inside an app (WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux). |
+| **Rust** | A fast programming language that prevents whole families of crashes and security bugs. Pebble's shell is written in it. |
+| **Cargo** | Rust's tool for building, testing and downloading crates. |
+| **Crate** | A Rust library (a dependency). Listed in `Cargo.toml`, pinned in `Cargo.lock`. |
+| **IPC / command** | How the interface asks the Rust side to do something ("save this"). Inter-process communication. |
+| **Capability / permission** | A Tauri rule listing what the interface may ask for. Pebble's is the smallest: `core:default`. |
+| **Atomic write** | Saving to a temporary file and then swapping it in, so a crash can never leave half a file. |
+| **App data folder** | The place each system keeps an app's files for the current user. |
+| **Installer / bundle** | The file people download: `.exe`/`.msi` (Windows), `.dmg` (macOS), `.deb`/`.rpm`/`.AppImage` (Linux). |
+| **Code signing** | A paid digital signature that tells macOS and Windows who made an app, so they don't warn people. |
+| **CI (continuous integration)** | Robots (GitHub Actions) that run the checks on every push. |
+| **Artifact** | A file a CI run produces and keeps for download, e.g. an installer. |
+| **clippy / rustfmt** | Rust's built-in code checker and formatter. |
 
 ## Git and GitHub
 | Term | Plain meaning |
@@ -41,7 +57,8 @@
 | **Remote (origin)** | The copy of the repo on GitHub. |
 | **Issue** | A to-do, bug or idea tracked on GitHub. |
 | **Pull request (PR)** | A proposed change, reviewed before merging. |
-| **GitHub Pages** | Free website hosting straight from a repo. |
+| **GitHub Actions** | GitHub's robots that run checks and build installers. |
+| **Release** | A published version on GitHub with its installers attached. |
 
 ## Design and accessibility
 | Term | Plain meaning |

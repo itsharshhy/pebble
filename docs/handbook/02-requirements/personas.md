@@ -12,7 +12,8 @@ seen a therapist and wouldn't call herself "anxious".
 **Goals:** Feel lighter at night. Stop the same worries looping.
 **Frustrations:** Journaling apps feel like homework; mental-health apps feel clinical and make her
 feel "diagnosed"; she doesn't want her thoughts on a server.
-**What Pebble must do for her:** capture in under 20 seconds; never feel like therapy; no guilt
+**Uses:** her laptop, often late in the evening.
+**What Pebble must do for her:** capture in under 20 seconds (Ctrl+N from anywhere); never feel like therapy; no guilt
 when she skips a week; proof, over time, that her forecasts are often wrong.
 **Quote:** *"I don't want to talk about my feelings. I just want my brain to be quieter."*
 
@@ -20,7 +21,8 @@ when she skips a week; proof, over time, that her forecasts are often wrong.
 **Situation:** Engineer. Distrusts "wellness" language; trusts numbers.
 **Goals:** See an honest tally. Export to a spreadsheet.
 **Frustrations:** Vague "insights", gamification, emojis.
-**What Pebble must do for him:** a clear count in the Garden; raw JSON export; no fluff.
+**Uses:** a Linux desktop at work and a MacBook at home.
+**What Pebble must do for him:** a clear count in the Garden; raw JSON export he can move between computers; no fluff.
 **Quote:** *"Show me the hit rate."*
 
 ## Mira, 29: in therapy *(secondary)*

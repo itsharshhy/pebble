@@ -2,9 +2,9 @@
 *Phase: Maintenance · Keeping users safe over time.*
 
 ## Our advantage
-With **zero dependencies and no server**, the usual sources of security work (outdated packages,
-server patches, leaked databases) don't exist. Our job is to keep it that way, and to keep our
-own code safe.
+With **no server, no interface dependencies and a handful of Rust crates**, the usual sources of
+security work (server patches, leaked databases, hundreds of packages) mostly don't exist. Our
+job is to keep it that way, keep the crates updated, and keep our own code safe.
 
 ## Reporting vulnerabilities (becomes `SECURITY.md`)
 > Please report security problems privately via GitHub's **"Report a vulnerability"** button
@@ -14,14 +14,17 @@ own code safe.
 Enable it: repo → Settings → Code security → **Private vulnerability reporting** (available on
 public repos).
 
-## Monthly security check (10 minutes)
-- [ ] Network tab on the live site: still same-origin only
-- [ ] CSP still present and unchanged
+## Monthly security check (15 minutes)
+- [ ] `cargo install cargo-audit` once, then `cargo audit` in `src-tauri/`: no known vulnerabilities (or each one explained)
+- [ ] `cargo update` for patch versions of Tauri and its plugins; run all checks; commit `Cargo.lock`
+- [ ] Inspector Network tab: still no outside requests
+- [ ] CSP in `tauri.conf.json` and `index.html` unchanged; capabilities still `core:default`
 - [ ] Search the code for `innerHTML`, `eval`, `new Function`, `document.write`: each must be absent or reviewed
 - [ ] Review any new browser API in use against [Privacy and security](../03-design/privacy-security.md)
 
 ## Browser changes to watch
-- **Storage policies:** e.g. Safari's eviction of script-written storage after 7 days without user interaction. If policies tighten, prioritise the v2 PWA.
+- **Tauri security advisories** (github.com/tauri-apps/tauri/security). Patch releases are small; take them promptly.
+- **WebView2 / WebKitGTK / WKWebView** updates come with the operating system, so people get engine security fixes without us.
 - **Deprecations** of APIs we use (rare for our stack).
 
 ## If a security bug is found (S1)

@@ -5,7 +5,8 @@ This file is the persistent memory for the project: decisions, agreements and co
 here, not in tool-specific files. Read it fully before doing anything.
 
 ## 1. What Pebble is
-A calm, private, open-source web app for overthinkers. The user writes a worry in one line, picks
+A calm, private, open-source **desktop app (Windows, macOS, Linux)** for overthinkers, built with
+Tauri 2 (Rust shell) and a plain HTML/CSS/JS interface. The user writes a worry in one line, picks
 a check-back date, and on that day answers "Did it happen?". Over time they build a private record
 of how often their worries came true. Based on the Worry Outcome Journal (LaFreniere & Newman, 2020).
 Positioning: **"A prediction tracker for overthinkers. Your brain makes forecasts; this keeps score."**
@@ -25,7 +26,7 @@ Positioning: **"A prediction tracker for overthinkers. Your brain makes forecast
 5. **Project memory lives here** in AGENTS.md. Update §6 (Decision log) when significant decisions are made.
 6. **No personal information** about the maintainer in this repo. Project facts only.
 7. **Public-facing actions need explicit approval every time:** making the repo public, publishing releases, posting anywhere.
-8. **Never** add dependencies, analytics, external fonts or network requests without an ADR and approval.
+8. **Never** add dependencies (npm packages or Rust crates), analytics, external fonts, Tauri permissions or network requests without an ADR and approval.
 
 ## 4. Technical facts for agents
 | Fact | Detail |
@@ -36,10 +37,14 @@ Positioning: **"A prediction tracker for overthinkers. Your brain makes forecast
 | Commit identity | Repo-local config; GitHub **noreply** email. Never use a personal email. |
 | Long paths | `git config core.longpaths true` is set (the app's working folder has very long paths) |
 | Commit style | Conventional Commits (`feat:`, `fix:`, `docs:`…) |
-| Local preview | `python -m http.server 5317 --bind 127.0.0.1` from the repo root |
-| Stack | Plain HTML/CSS/JS, no build, no dependencies ([ADR-001](docs/handbook/03-design/decisions.md)) |
-| Design tokens | [Design system](docs/handbook/03-design/design-system.md); living preview in `design/preview.html` |
-| Hosting caveat | GitHub Pages on a private repo needs a paid plan ([Deployment](docs/handbook/06-release/deployment.md)) |
+| Run the app | `cargo tauri dev` (needs Rust + `cargo install tauri-cli --version "^2" --locked`) |
+| Browser preview | `python -m http.server 5317 --bind 127.0.0.1 --directory ui` (interface only, localStorage) |
+| Checks | `node tests/tests.js` · `cargo test` · `cargo clippy --all-targets -- -D warnings` · `cargo fmt --check` (in `src-tauri/`) |
+| Stack | Tauri 2 + Rust shell (`src-tauri/`); plain HTML/CSS/JS interface (`ui/`), no framework, no npm ([ADR-001](docs/handbook/03-design/decisions.md), [ADR-009](docs/handbook/03-design/decisions.md)) |
+| Data | One `pebble.json` in the app data folder, atomic writes by Rust ([ADR-010](docs/handbook/03-design/decisions.md)) |
+| Design tokens | [Design system](docs/handbook/03-design/design-system.md); living reference is `ui/style.css` |
+| Installers | GitHub Actions `build.yml` (manual or on `v*` tags) for Windows, macOS, Linux; unsigned for now ([Deployment](docs/handbook/06-release/deployment.md)) |
+| Linux build deps | `libwebkit2gtk-4.1-dev build-essential libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev` |
 
 ### Cloud sessions (Claude Code on the web): primary way of working
 The maintainer works mainly in **cloud sessions**, which start from a fresh clone of this repo.
@@ -52,10 +57,10 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 - **At the end of every session**, update §5 (status) and §6 (decision log) and push, so the next session knows where things stand.
 
 ## 5. Current status (update at the end of every session)
-- **Done:** Loop 0 (repo, 37-page handbook, design preview, AGENTS.md/CLAUDE.md).
-- **Next for the maintainer (no code):** v0, the 14-day worry test on paper or phone notes ([Roadmap](docs/handbook/01-planning/roadmap.md#v0-prove-it-no-code)). Suggested, not yet confirmed as started.
-- **Next for code:** Loop 1, a static Today screen in `index.html` + `style.css` with all tokens, matching `design/preview.html` ([Build plan](docs/handbook/04-implementation/build-plan.md)). Only begin when the maintainer asks.
-- **Open decisions:** final name ("Pebble" is a working name); when to go public (needed for free GitHub Pages hosting).
+- **Done:** Loop 0 (handbook). Handbook v3.0 rewritten for the desktop app (2026-10-12). Pebble 0.1.0 built: all v1 screens (U1–U9, U13, U14), Tauri 2 shell with atomic file storage, native export/import dialogs, warm premium visual pass with dusk-pond illustrations, CI and installer workflows. Verified on Linux: 24 JS unit tests (4 timezones), 7 Rust tests, clippy and fmt clean, 70 end-to-end browser checks, a release build (`.deb`/`.rpm` 2.45 MB), and the real app saving and reloading `pebble.json`.
+- **Next:** run **Actions → Build installers** once; run the [manual checklist](docs/handbook/05-testing/manual-checklist.md) on Windows and macOS (never tested there yet); Calm Audit records per screen; then usability tests (Build plan loops 7–8).
+- **Open decisions:** final name ("Pebble" is a working name); code signing budget (risk R11); when to go public and publish a release (needs explicit approval).
+- **Not verified yet:** Windows and macOS builds, screen readers inside the app, Lighthouse score.
 
 ## 5a. How to start any new session (for the agent)
 1. Read this file fully, then [docs/handbook/README.md](docs/handbook/README.md).
@@ -76,6 +81,12 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 | 2026-10-13 | Docs auto-pushed after every change; project memory kept in AGENTS.md | Maintainer standing instruction |
 | 2026-10-13 | v0 (14-day paper test) comes before any code | Proves the loop helps before investing build time; the data decides, not opinions |
 | 2026-10-13 | CLAUDE.md added as a one-line pointer (`@AGENTS.md`); work continues in cloud sessions | Cloud sessions start from a fresh clone, so all context must live in the repo |
+| 2026-10-12 | **Pebble becomes a desktop app (Tauri 2 + Rust) for Windows, macOS, Linux**; no website or hosting (ADR-009, ADR-011) | Maintainer request: fast, local, installable. Tauri chosen over Electron (size, speed) and pure-Rust UIs (accessibility, premium design, reuse of the interface) |
+| 2026-10-12 | Data moves to one atomically written file (ADR-010) | Survives browser cleanups and crashes; lowers data-loss risk R2 from 6 to 3 |
+| 2026-10-12 | Warmer palette, system serif for display text, dusk-pond illustration, nav icons (ADR-012, ADR-013) | Maintainer asked for premium, warm, calm design; all text pairs re-measured for WCAG AA |
+| 2026-10-12 | Built in parallel with v0 instead of after it | Maintainer's explicit choice; the app can itself serve as the v0 tool |
+| 2026-10-12 | Interface keeps a browser-preview fallback (ADR-014) | Instant previews and automated tests without a desktop build |
+| 2026-10-12 | Maintainer approved publishing release v0.1.0 (pre-release) with installers for all systems | Maintainer asked: "release the build and give me the link". Repo stays private; going public is still a separate decision |
 
 ## 7. Research summary (details in the handbook's Science page)
 - Worry Outcome Journal: 91.4% of tracked worries didn't come true (n = 29, GAD; small sample, **don't generalise**).

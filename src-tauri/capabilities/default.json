@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The smallest set of permissions Pebble's window needs. No file system, shell or network access is granted to the interface; Pebble's own Rust commands do the careful work.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

@@ -8,10 +8,11 @@
 | Check-back date | Cloud sync |
 | Check-back with 3 answers + Let it go + Undo | AI of any kind |
 | Garden summary | Charts and mood graphs |
-| Export, import, delete all | Notifications |
+| Export, import, delete all (native dialogs) | Notifications |
 | Optional feeling word, next step, breath pause | Sharing or social |
-| Light and evening palettes; reduced motion | Mobile app-store builds |
+| Light and evening palettes; reduced motion | Mobile apps and a public website |
 | Settings + About & safety | Translations |
+| Installers for Windows, macOS and Linux | Auto-updates, code signing (v2) |
 
 **Screen budget for v1:** 5 screens (Today, New worry, Check-back, Garden, Settings) plus the
 optional breath pause. Adding a screen requires removing one or a strong case against the Principles.

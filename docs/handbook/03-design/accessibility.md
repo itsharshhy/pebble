@@ -21,13 +21,14 @@ stressed users, which is exactly when Pebble gets used.
 |---|---|
 | Everything works with a keyboard (Tab, Shift+Tab, Enter, Space, Esc) | 2.1.1 |
 | No keyboard traps; dialogs return focus to the trigger on close | 2.1.2 |
-| Visible focus ring on every interactive element (3 px `--sage`) | 2.4.7 |
+| Visible focus ring on every interactive element (3 px `--sage-deep`, ≥ 3:1 on every background, [ADR-013](decisions.md)) | 2.4.7, 1.4.11 |
 | Focus not hidden behind sticky nav | 2.4.11 |
 | Touch targets ≥ 44×44 px (exceeds 24×24 minimum) | 2.5.8 |
 | No time limits, except Undo (8 s). Undo is a bonus, not required to avoid loss: answers can be changed later from the Garden list (v1.x). | 2.2.1 |
 | Reduced motion respected; nothing flashes | 2.3.1, 2.3.3 |
 | Logical focus order follows visual order | 2.4.3 |
 | Page `<title>` changes with each screen ("Today · Pebble") | 2.4.2 |
+| Keyboard shortcut Ctrl/Cmd+N only adds a way; it never replaces a visible button, and is off while a dialog is open | 2.1.4 |
 
 ### Understandable
 | Rule | WCAG |
@@ -49,7 +50,10 @@ stressed users, which is exactly when Pebble gets used.
 - **Screen change:** move focus to the new screen's `<h1>` (with `tabindex="-1"`) so screen-reader users hear where they are.
 - **Breath pause:** the instruction is announced once per phase, not every second.
 - **Garden number:** read as a sentence: `aria-label="31 of 34 pebbles you checked didn't happen"`.
-- **Pond of stones:** `aria-hidden`; the sentence carries the meaning.
+- **Pond of stones and all illustrations:** `aria-hidden`; the sentence carries the meaning.
+- **Nav icons:** `aria-hidden`; the text label under each icon is the name.
+- **Switch (Breath pause):** a `<button role="switch" aria-checked>` labelled by the setting's name and described by its hint.
+- **Three web engines:** test with Narrator or NVDA on Windows, VoiceOver on macOS and Orca on Linux, since each system's web view talks to its own screen reader.
 
 ## Done when
 Every rule above is checked in [Accessibility testing](../05-testing/accessibility-testing.md) for the release.

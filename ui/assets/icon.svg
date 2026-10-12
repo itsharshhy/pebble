@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Pebble app icon: a warm dusk sky, still water and one smooth stone resting on it.
+       Neutral on purpose: nothing says "worry" on a shared screen (threat T4). -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6E7D3"/>
+      <stop offset="0.62" stop-color="#EFD3B8"/>
+      <stop offset="0.62" stop-color="#C9DAD3"/>
+      <stop offset="1" stop-color="#A9C2B6"/>
+    </linearGradient>
+    <radialGradient id="stone" cx="0.38" cy="0.32" r="0.8">
+      <stop offset="0" stop-color="#A9BFAE"/>
+      <stop offset="0.55" stop-color="#7E9A86"/>
+      <stop offset="1" stop-color="#5B7764"/>
+    </radialGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FBF1E3"/>
+      <stop offset="1" stop-color="#FBF1E3" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="squircle">
+      <rect x="64" y="64" width="896" height="896" rx="220"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#squircle)">
+    <rect x="64" y="64" width="896" height="896" fill="url(#sky)"/>
+    <circle cx="700" cy="330" r="190" fill="url(#sun)"/>
+    <circle cx="700" cy="330" r="70" fill="#FBF3E8"/>
+    <ellipse cx="512" cy="760" rx="300" ry="46" fill="#8FAE9E" opacity="0.55"/>
+    <ellipse cx="512" cy="822" rx="390" ry="40" fill="none" stroke="#F7EFE4" stroke-width="10" opacity="0.6"/>
+    <ellipse cx="512" cy="860" rx="470" ry="44" fill="none" stroke="#F7EFE4" stroke-width="8" opacity="0.35"/>
+    <path fill="url(#stone)" d="M300 690c0-120 104-206 236-206 136 0 196 84 196 170 0 92-92 132-226 132-132 0-206-24-206-96z"/>
+    <path fill="#FFFFFF" opacity="0.28" d="M380 560c40-36 96-52 150-48-60 18-104 46-130 86-18-6-28-20-20-38z"/>
+  </g>
+</svg>

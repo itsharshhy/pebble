@@ -11,8 +11,10 @@ contributions often *remove* things.
 3. For anything bigger than a bug fix, **open an issue first** and describe the idea. This saves you building something we can't accept.
 
 ## Ground rules
-- **No dependencies.** No npm packages, CDNs, fonts or analytics. ([ADR-001](../03-design/decisions.md))
+- **No interface dependencies.** No npm packages, CDNs, fonts or analytics ([ADR-001](../03-design/decisions.md)). A new Rust crate needs an ADR.
 - **No network requests.** The CSP blocks them anyway.
+- **Keep the interface's permissions at `core:default`.** Put careful work in a narrow Rust command.
+- **Run the checks:** `node tests/tests.js`, `cargo test`, `cargo clippy -- -D warnings`, `cargo fmt --check`.
 - **Every psychological feature needs a [Science](../00-foundation/science.md) entry** with an honest strength rating.
 - **Every UI change passes the [Calm Audit](../05-testing/calm-audit.md)**. Include the record in your pull request.
 - **Every string goes in `strings.js`** and follows [Content and voice](../03-design/content-and-voice.md).
@@ -26,6 +28,7 @@ contributions often *remove* things.
 - [ ] Network tab: no new requests
 - [ ] Handbook updated if behaviour changed
 - [ ] Screenshots in both palettes for UI changes
+- [ ] Tested on at least one desktop system (say which)
 
 ## Code of conduct
 We follow the **Contributor Covenant 2.1**. In short: be kind, assume good intent, and remember

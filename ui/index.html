@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Privacy: Pebble may load only its own files and can talk only to its own Rust side
+       (ipc:), never the internet. The desktop app enforces the same rule from
+       src-tauri/tauri.conf.json. See docs/handbook/03-design/privacy-security.md -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;
+                 font-src 'self'; connect-src ipc: http://ipc.localhost; form-action 'none';
+                 base-uri 'none'; object-src 'none'; frame-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="A calm, private place to set worries down.">
+  <title>Pebble</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <!-- Shared colour gradients for every illustration. Colours come from CSS tokens. -->
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="pebble-sky" x1="0" y1="0" x2="0" y2="1">
+        <stop class="sky-top" offset="0"/><stop class="sky-bottom" offset="1"/>
+      </linearGradient>
+      <linearGradient id="pebble-water" x1="0" y1="0" x2="0" y2="1">
+        <stop class="water-top" offset="0"/><stop class="water-bottom" offset="1"/>
+      </linearGradient>
+      <radialGradient id="pebble-glow">
+        <stop class="glow-in" offset="0"/><stop class="glow-out" offset="1"/>
+      </radialGradient>
+      <radialGradient id="pebble-stone" cx="0.38" cy="0.3" r="0.85">
+        <stop class="stone-light" offset="0"/><stop class="stone-dark" offset="1"/>
+      </radialGradient>
+    </defs>
+  </svg>
+
+  <!-- All words come from js/strings.js through data-s attributes, so they live in one place. -->
+  <noscript><p class="noscript">Pebble needs JavaScript to run.</p></noscript>
+
+  <div class="app">
+    <main id="main">
+      <p class="notice" id="notice" role="status" aria-live="polite" hidden></p>
+
+      <!-- First run (Screens → First run) -->
+      <section id="screen-welcome" class="screen" hidden>
+        <h1 tabindex="-1" class="visually-hidden" data-s="titleWelcome"></h1>
+        <div class="welcome-card">
+<svg class="scene scene-welcome" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice"
+             aria-hidden="true" focusable="false">
+          <rect class="scene-sky" width="360" height="200"/>
+          <circle class="scene-glow" cx="262" cy="72" r="80"/>
+          <circle class="scene-sun" cx="262" cy="72" r="20"/>
+          <path class="scene-hill-far" d="M0 126C60 98 112 102 162 114s108-22 198 2v84H0z"/>
+          <path class="scene-hill-near" d="M0 134c70-16 140-10 200-2s100-10 160-2v70H0z"/>
+          <rect class="scene-water" y="138" width="360" height="62"/>
+          <path class="scene-line" d="M30 166h70M226 152h96M110 184h150"/>
+          <path class="scene-reed" d="M66 142c0-18-4-32-10-44M74 142c0-20 4-34 10-46M82 142c0-12-2-22-6-30"/>
+          <ellipse class="scene-ripple" cx="182" cy="158" rx="48" ry="6"/>
+          <path class="scene-stone" d="M152 150c0-15 14-26 31-26 18 0 27 11 27 22 0 12-12 17-30 17-17 0-28-3-28-13z"/>
+          <path class="scene-shine" d="M164 136c5-5 12-7 19-6-8 3-13 7-16 12-3-1-5-3-3-6z"/>
+        </svg>
+          <p class="welcome-step" id="welcome-step"></p>
+          <p class="welcome-text" id="welcome-text" aria-live="polite"></p>
+          <p class="welcome-soft" id="welcome-soft" hidden></p>
+          <p class="welcome-soft" id="welcome-help" hidden>
+            <a class="text-link" href="#about" data-s="findSupport"></a>
+          </p>
+        </div>
+        <div class="actions">
+          <button type="button" class="button primary" id="welcome-next"></button>
+        </div>
+      </section>
+
+      <!-- 1. Today -->
+      <section id="screen-today" class="screen" hidden>
+        <h1 tabindex="-1" class="greeting" id="greeting"></h1>
+        <p class="soft status-line" id="today-status"></p>
+<svg class="scene scene-today" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice" id="today-pond" hidden
+             aria-hidden="true" focusable="false">
+          <rect class="scene-sky" width="360" height="200"/>
+          <circle class="scene-glow" cx="262" cy="72" r="80"/>
+          <circle class="scene-sun" cx="262" cy="72" r="20"/>
+          <path class="scene-hill-far" d="M0 126C60 98 112 102 162 114s108-22 198 2v84H0z"/>
+          <path class="scene-hill-near" d="M0 134c70-16 140-10 200-2s100-10 160-2v70H0z"/>
+          <rect class="scene-water" y="138" width="360" height="62"/>
+          <path class="scene-line" d="M30 166h70M226 152h96M110 184h150"/>
+          <path class="scene-reed" d="M66 142c0-18-4-32-10-44M74 142c0-20 4-34 10-46M82 142c0-12-2-22-6-30"/>
+          <ellipse class="scene-ripple" cx="182" cy="158" rx="48" ry="6"/>
+          <path class="scene-stone" d="M152 150c0-15 14-26 31-26 18 0 27 11 27 22 0 12-12 17-30 17-17 0-28-3-28-13z"/>
+          <path class="scene-shine" d="M164 136c5-5 12-7 19-6-8 3-13 7-16 12-3-1-5-3-3-6z"/>
+        </svg>
+        <div id="today-ready" class="group" hidden>
+          <h2 class="group-heading" data-s="readyHeading"></h2>
+          <ul class="card-list" id="ready-list"></ul>
+          <button type="button" class="text-link" id="ready-more" hidden></button>
+        </div>
+        <div id="today-resting" class="group" hidden>
+          <h2 class="group-heading" data-s="restingHeading"></h2>
+          <ul class="card-list" id="resting-list"></ul>
+          <button type="button" class="text-link" id="resting-more" hidden></button>
+        </div>
+        <div class="actions pinned">
+          <a class="button primary" href="#new" data-s="mainAction"></a>
+        </div>
+      </section>
+
+      <!-- 2. New worry -->
+      <section id="screen-new" class="screen" hidden>
+        <form class="new-form" id="new-form" novalidate>
+          <h1 tabindex="-1"><label for="worry-text" data-s="newTitle"></label></h1>
+          <input id="worry-text" class="input" type="text" maxlength="140" autocomplete="off"
+                 data-s-placeholder="placeholder" aria-describedby="worry-count">
+          <p class="counter" id="worry-count" aria-live="polite"></p>
+
+          <fieldset class="field">
+            <legend class="question-small" data-s="dateQuestion"></legend>
+            <div class="chips" id="date-chips">
+              <button type="button" class="chip" data-days="1" data-s="chipTomorrow"></button>
+              <button type="button" class="chip" data-days="3" data-s="chipThreeDays"></button>
+              <button type="button" class="chip" data-days="7" data-s="chipWeek"></button>
+              <button type="button" class="chip" data-days="pick" data-s="chipPick"></button>
+            </div>
+            <div class="pick-date" id="pick-date" hidden>
+              <label for="pick-date-input" class="soft" data-s="pickDateLabel"></label>
+              <input id="pick-date-input" class="input" type="date"
+                     aria-describedby="pick-date-hint">
+              <p class="hint" id="pick-date-hint" data-s="pickDateHint"></p>
+            </div>
+          </fieldset>
+
+          <details class="more" id="more">
+            <summary data-s="moreFold"></summary>
+            <fieldset class="field">
+              <legend class="soft" data-s="feelingLabel"></legend>
+              <div class="chips" id="feeling-chips"></div>
+            </fieldset>
+            <div class="field">
+              <label for="next-step" class="soft" data-s="nextStepLabel"></label>
+              <input id="next-step" class="input" type="text" maxlength="100" autocomplete="off"
+                     data-s-placeholder="nextStepPlaceholder">
+            </div>
+            <div class="field friend">
+              <p data-s="friendPrompt"></p>
+              <p class="hint" data-s="friendHint"></p>
+            </div>
+          </details>
+
+          <div class="actions">
+            <button type="submit" class="button primary" id="save-worry" data-s="saveButton"
+                    disabled></button>
+            <button type="button" class="text-link" id="cancel-worry" data-s="cancel"></button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3. Breath pause (optional pre-step before a check-back) -->
+      <section id="screen-breath" class="screen" hidden>
+        <h1 tabindex="-1" class="soft centered" data-s="breathIntro"></h1>
+        <div class="breath-wrap"><div class="breath-circle" id="breath-circle"
+             aria-hidden="true"></div></div>
+        <p class="question centered" id="breath-label" aria-live="polite"></p>
+        <div class="actions">
+          <button type="button" class="button primary" id="breath-ready"
+                  data-s="breathReady"></button>
+          <button type="button" class="text-link" id="breath-skip" data-s="breathSkip"></button>
+        </div>
+      </section>
+
+      <!-- 4. Check-back -->
+      <section id="screen-check" class="screen" hidden>
+        <h1 tabindex="-1" class="soft" id="check-lead"></h1>
+        <figure class="quote">
+          <span class="pebble" id="check-pebble" aria-hidden="true"></span>
+          <span class="ripple" id="ripple" aria-hidden="true"></span>
+          <blockquote id="check-text"></blockquote>
+          <figcaption class="soft" id="check-step" hidden></figcaption>
+        </figure>
+        <div class="check-ask" id="check-ask">
+          <h2 class="question" data-s="question"></h2>
+          <div class="answers" id="answers">
+            <button type="button" class="button answer didnt" data-answer="didnt"
+                    data-s="answerDidnt"></button>
+            <button type="button" class="button answer" data-answer="better"
+                    data-s="answerBetter"></button>
+            <button type="button" class="button answer happened" id="answer-happened"
+                    aria-expanded="false" aria-controls="follow-up"
+                    data-s="answerHappened"></button>
+          </div>
+          <div class="follow-up" id="follow-up" hidden>
+            <p class="question-small" data-s="followUp"></p>
+            <div class="chips">
+              <button type="button" class="button answer" data-answer="worse"
+                      data-s="followYes"></button>
+              <button type="button" class="button answer" data-answer="happened"
+                      data-s="followExpected"></button>
+            </div>
+          </div>
+          <button type="button" class="text-link" id="let-go" data-s="letGo"></button>
+        </div>
+        <div class="check-closed" id="check-closed" hidden>
+          <p class="closing" id="closing" role="status" aria-live="polite"></p>
+          <div class="soft help-door" id="help-door" hidden>
+            <p data-s="notMedical"></p>
+            <a class="text-link" href="#about" data-s="findSupport"></a>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="#today" id="check-done" data-s="done"></a>
+            <button type="button" class="text-link" id="undo" data-s="undo"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Garden -->
+      <section id="screen-garden" class="screen" hidden>
+        <h1 tabindex="-1" class="soft" data-s="gardenLead"></h1>
+        <div id="garden-count">
+          <p class="visually-hidden" id="garden-sentence"></p>
+          <p class="big-number" id="garden-number" aria-hidden="true"></p>
+          <p class="soft" aria-hidden="true" data-s="gardenLine"></p>
+        </div>
+        <p id="garden-small" data-s="gardenSmall" hidden></p>
+<svg class="scene scene-garden" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice"
+             aria-hidden="true" focusable="false">
+          <rect class="scene-sky" width="360" height="200"/>
+          <circle class="scene-glow" cx="262" cy="72" r="80"/>
+          <circle class="scene-sun" cx="262" cy="72" r="20"/>
+          <path class="scene-hill-far" d="M0 126C60 98 112 102 162 114s108-22 198 2v84H0z"/>
+          <path class="scene-hill-near" d="M0 134c70-16 140-10 200-2s100-10 160-2v70H0z"/>
+          <rect class="scene-water" y="138" width="360" height="62"/>
+          <path class="scene-line" d="M30 166h70M226 152h96M110 184h150"/>
+          <path class="scene-reed" d="M66 142c0-18-4-32-10-44M74 142c0-20 4-34 10-46M82 142c0-12-2-22-6-30"/>
+          <g id="pond-stones"></g>
+        </svg>
+        <p class="soft" data-s="gardenFooter"></p>
+      </section>
+
+      <!-- 6. Settings -->
+      <section id="screen-settings" class="screen" hidden>
+        <h1 tabindex="-1" data-s="titleSettings"></h1>
+        <div class="settings-group">
+          <h2 class="group-heading" data-s="comfortHeading"></h2>
+          <fieldset class="field">
+            <legend data-s="paletteLabel"></legend>
+            <div class="chips" id="palette-chips">
+              <button type="button" class="chip" data-theme-choice="system"
+                      data-s="paletteSystem"></button>
+              <button type="button" class="chip" data-theme-choice="light"
+                      data-s="paletteDay"></button>
+              <button type="button" class="chip" data-theme-choice="evening"
+                      data-s="paletteEvening"></button>
+            </div>
+          </fieldset>
+          <div class="setting-row">
+            <div>
+              <p id="breath-setting-label" data-s="breathSetting"></p>
+              <p class="hint" id="breath-setting-hint" data-s="breathSettingHint"></p>
+            </div>
+            <button type="button" class="switch" id="breath-switch" role="switch"
+                    aria-checked="false" aria-labelledby="breath-setting-label"
+                    aria-describedby="breath-setting-hint"><span class="switch-knob"></span>
+            </button>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h2 class="group-heading" data-s="dataHeading"></h2>
+          <p class="soft" data-s="dataNote"></p>
+          <div class="stack">
+            <button type="button" class="button primary" id="export" data-s="exportButton"></button>
+            <button type="button" class="button" id="import" data-s="importButton"></button>
+            <input type="file" id="import-file" accept=".json,application/json" hidden>
+            <button type="button" class="button" id="delete" data-s="deleteButton"></button>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h2 class="group-heading" data-s="aboutHeading"></h2>
+          <a class="text-link" href="#about" data-s="aboutLink"></a>
+        </div>
+      </section>
+
+      <!-- 7. About & safety -->
+      <section id="screen-about" class="screen about" hidden>
+        <h1 tabindex="-1" data-s="titleAbout"></h1>
+        <p data-s="aboutWhat"></p>
+        <h2 class="group-heading" data-s="safetyHeading"></h2>
+        <p data-s="notMedical"></p>
+        <ul class="help-list">
+          <li><a class="text-link" href="https://findahelpline.com" rel="noopener noreferrer"
+                 target="_blank" data-link="helpline" data-s="helpWorld"></a></li>
+          <li data-s="helpIndia"></li>
+          <li data-s="helpEmergency"></li>
+        </ul>
+        <h2 class="group-heading" data-s="privacyHeading"></h2>
+        <p data-s="privacyLine"></p>
+        <p class="soft" data-s="privacyDetail"></p>
+        <h2 class="group-heading" data-s="aboutCountHeading"></h2>
+        <p class="soft" data-s="aboutCount"></p>
+        <h2 class="group-heading" data-s="aboutIdeaHeading"></h2>
+        <p class="soft" data-s="aboutIdea"></p>
+        <p class="soft small" id="version-line"></p>
+        <p class="small">
+          <a class="text-link" href="https://github.com/itsharshhy/pebble"
+             rel="noopener noreferrer" target="_blank" data-link="source" data-s="sourceLink"></a>
+        </p>
+        <a class="text-link" href="#settings" data-s="backToSettings"></a>
+      </section>
+    </main>
+
+    <nav class="nav" data-s-label="navLabel">
+      <a href="#today" data-route="today">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="13" r="4"/><path d="M3 19h18M12 4v2M5.6 7.6l1.4 1.4M18.4 7.6 17 9"/>
+        </svg><span data-s="navToday"></span></a>
+      <a href="#garden" data-route="garden">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 17c0-3 3-5 6-5s5 2 5 4-2 3-5 3-6 0-6-2zM14 12c0-2 2-4 4-4s3 2 3 3-1 3-3 3"/>
+        </svg><span data-s="navGarden"></span></a>
+      <a href="#settings" data-route="settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/>
+          <circle cx="10" cy="17" r="2"/>
+        </svg><span data-s="navSettings"></span></a>
+    </nav>
+  </div>
+
+  <!-- Confirmations. <dialog> traps focus and closes with Esc. -->
+  <dialog class="dialog" id="dialog-leave" aria-labelledby="dialog-leave-text">
+    <p id="dialog-leave-text" data-s="leaveQuestion"></p>
+    <div class="actions">
+      <button type="button" class="button primary" data-close="keep" data-s="keepWriting"></button>
+      <button type="button" class="text-link" data-close="leave" data-s="leave"></button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="dialog-import" aria-labelledby="dialog-import-text">
+    <p id="dialog-import-text"></p>
+    <p class="soft" id="dialog-import-skipped" hidden></p>
+    <div class="actions">
+      <button type="button" class="button primary" data-close="replace"
+              data-s="importReplace"></button>
+      <button type="button" class="text-link" data-close="keep" data-s="importKeep"
+              autofocus></button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="dialog-delete" aria-labelledby="dialog-delete-text">
+    <p id="dialog-delete-text" data-s="deleteConfirm"></p>
+    <div class="actions">
+      <button type="button" class="button primary" data-close="keep" data-s="deleteKeep"
+              autofocus></button>
+      <button type="button" class="button quiet-danger" data-close="delete"
+              data-s="deleteAll"></button>
+    </div>
+  </dialog>
+</body>
+</html>

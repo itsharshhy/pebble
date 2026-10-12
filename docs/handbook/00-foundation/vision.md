@@ -13,7 +13,8 @@ and the people with more untrue worries saw larger symptom drops
 (LaFreniere & Newman, 2020; see [Science S1](science.md#s1)).
 
 ## The solution
-Pebble is a small, calm web app:
+Pebble is a small, calm **desktop app for Windows, macOS and Linux**. It runs entirely on your
+own computer: no website, no account, no internet needed.
 1. **Set a pebble down:** write a worry in one short line.
 2. **Choose when to look back:** tomorrow, in 3 days, in a week, or on a date you pick.
 3. **Check back:** on that day Pebble asks one question: *Did it happen?*
@@ -27,7 +28,7 @@ and the words ("set down", "let go", never "log" or "delete").
 
 ## Who it's for
 - **Everyday overthinkers** without a diagnosis, who'd never call themselves "anxious" but replay and predict.
-- **Privacy-conscious people** who won't put their inner life on someone's cloud.
+- **Privacy-conscious people** who won't put their inner life on someone's cloud, and want an app they can install, own and back up as a file.
 - **People in therapy** whose therapist assigned a worry log (a standard CBT exercise).
 
 ## Who it's not for

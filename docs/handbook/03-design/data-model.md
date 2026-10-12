@@ -2,9 +2,13 @@
 *Phase: Design · Exactly what Pebble stores, and the rules for it.*
 
 ## Storage location
-- **Key:** `pebble.v1` in `localStorage`.
-- **Value:** one JSON document (below).
-- **Settings** live in the same document so a single export captures everything.
+- **Desktop app:** one file, `pebble.json`, in the app's data folder ([ADR-010](decisions.md)):
+  - Windows `%APPDATA%\app.pebble.desktop\` · macOS `~/Library/Application Support/app.pebble.desktop/` · Linux `~/.local/share/app.pebble.desktop/`
+  - Written **atomically** by Rust (temporary file → flush → rename), so a crash never leaves half a file.
+  - The save before the latest one is kept as `pebble.previous.json`.
+  - Unreadable data is kept as `pebble.corrupt.<unix-seconds>.json`, never deleted silently.
+- **Browser preview only** ([ADR-014](decisions.md)): key `pebble.v1` in `localStorage`.
+- **Value:** one JSON document (below). **Settings** live in the same document so a single export captures everything.
 
 ## Document shape
 ```json
@@ -12,7 +16,8 @@
   "version": 1,
   "settings": {
     "theme": "system",
-    "breathPause": false
+    "breathPause": false,
+    "seenWelcome": true
   },
   "worries": [
     {
@@ -36,6 +41,7 @@
 | `version` | integer | Schema version. Currently `1`. Increment on breaking change. |
 | `settings.theme` | `"system"` · `"light"` · `"evening"` | Default `"system"`. |
 | `settings.breathPause` | boolean | Default `false` (U9). |
+| `settings.seenWelcome` | boolean | Default `false`. Set when the person taps **Begin** on the first-run cards, so they're never shown again. Missing in older files = `false`. |
 | `id` | string | `"w_"` + random base-36. Unique. Never reused. |
 | `text` | string | 1–140 chars after trimming. Required. |
 | `createdAt` | ISO 8601 UTC string | Set once; used for ordering and "3 days ago" text. |
@@ -61,25 +67,27 @@
 - **Let go** is excluded from both numerator and denominator.
 
 ## Validation (on every load and import)
+0. Rust refuses anything that isn't JSON or is over 5 MB, before writing or after reading a backup.
 1. Parse JSON inside `try/catch`.
 2. Check `version` is a known integer.
 3. For each worry: required fields present, types correct, enums valid, lengths in range.
 4. Invalid worries are **skipped and counted**, not silently dropped: "2 pebbles couldn't be read and were left out."
-5. Never `eval`, never insert text as HTML.
+5. Unknown fields are dropped; duplicate ids keep the first copy; bad settings fall back to defaults.
+6. Never `eval`, never insert text as HTML.
 
 ## Migrations
 When `version` changes, `storage.migrate(doc)` upgrades step by step (1→2→3). Rules:
-- Always back up the old document under `pebble.backup.v<old>` before migrating.
+- Always back up the old document (as `pebble.backup.v<old>.json` next to `pebble.json`) before migrating.
 - Migrations are pure functions with tests.
 - Imports from older versions go through the same migration path.
 
 ## Size estimate
-A worry with all fields is about 300 bytes as JSON. At about 5 MB per origin, that's roughly
-15,000 pebbles: more than 10 years at 4 a day.
+A worry with all fields is about 300 bytes as JSON. Pebble caps the file at 5 MB: roughly
+15,000 pebbles, more than 10 years at 4 a day. Saving the whole file takes a few milliseconds.
 
 ## Export format
-The export file *is* the document above, pretty-printed (2-space indent), named
-`pebble-backup-YYYY-MM-DD.json`. Readable in any text editor and importable into spreadsheets via
+The export file *is* the document above, pretty-printed (2-space indent), suggested as
+`pebble-backup-YYYY-MM-DD.json` in the system's **Save** dialog. The person chooses where it goes. Readable in any text editor and importable into spreadsheets via
 online JSON-to-CSV tools (a CSV export is planned for v1.x).
 
 ## Done when

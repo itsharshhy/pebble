@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- No external requests: everything here is local (Handbook §4.3 Privacy). -->
+<!-- Historical v0 mock-up. The app in ui/ is now the living reference (Design system page).
+     No external requests: everything here is local (Privacy and security). -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
 <title>Pebble · design preview</title>
 <style>
-  /* ---------- Design tokens (Handbook §5.4) ---------- */
+  /* ---------- Original v0 tokens (current tokens: ui/style.css) ---------- */
   :root {
     --bg: #F6F3EE; --surface: #FFFDF9; --ink: #2F3833; --ink-soft: #5F6963;
     --sage: #8FA89A; --sage-deep: #56705F; --sage-wash: #E3EBE5; --mist: #DCE5EA; --sand: #EADFCF; --clay: #C9A48E;
@@ -63,7 +64,7 @@
   .letgo { background: none; border: 0; color: var(--ink-soft); font: inherit; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; min-height: 44px; }
   .closing { text-align: center; color: var(--ink-soft); min-height: 1.6em; margin: 0; transition: opacity .6s var(--ease); }
 
-  /* Breath: 4s in, 6s out = 6 breaths/min, longer exhale (Handbook S5) */
+  /* Breath: 4s in, 6s out = 6 breaths/min, longer exhale (Science S5) */
   .breath-wrap { flex: 1; display: grid; place-items: center; }
   .breath { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--sage-wash), var(--sage)); animation: breathe 10s var(--ease) infinite; }
   @keyframes breathe { 0% { transform: scale(.7); } 40% { transform: scale(1.15); } 100% { transform: scale(.7); } }
@@ -191,7 +192,7 @@
   </footer>
 
 <script>
-  // Time-aware greeting (Handbook §5.4, calm patterns)
+  // Time-aware greeting
   const h = new Date().getHours();
   document.getElementById('greet').textContent =
     h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
