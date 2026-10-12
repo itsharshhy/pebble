@@ -86,6 +86,7 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 | 2026-10-12 | Warmer palette, system serif for display text, dusk-pond illustration, nav icons (ADR-012, ADR-013) | Maintainer asked for premium, warm, calm design; all text pairs re-measured for WCAG AA |
 | 2026-10-12 | Built in parallel with v0 instead of after it | Maintainer's explicit choice; the app can itself serve as the v0 tool |
 | 2026-10-12 | Interface keeps a browser-preview fallback (ADR-014) | Instant previews and automated tests without a desktop build |
+| 2026-10-12 | Maintainer approved publishing release v0.1.0 (pre-release) with installers for all systems | Maintainer asked: "release the build and give me the link". Repo stays private; going public is still a separate decision |
 
 ## 7. Research summary (details in the handbook's Science page)
 - Worry Outcome Journal: 91.4% of tracked worries didn't come true (n = 29, GAD; small sample, **don't generalise**).

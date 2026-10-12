@@ -6,7 +6,7 @@ An installer must be built **on** the system it's for, so GitHub Actions rents o
 | Workflow | Runs when | Does |
 |---|---|---|
 | `.github/workflows/ci.yml` | Every push and pull request | JavaScript tests, Rust tests, `clippy`, `rustfmt` on Linux |
-| `.github/workflows/build.yml` | By hand (**Actions → Build installers → Run workflow**) or when a tag like `v1.0.0` is pushed | Builds installers on Windows, macOS (Apple Silicon + Intel) and Linux, and uploads them as **artifacts** |
+| `.github/workflows/build.yml` | By hand (**Actions → Build installers → Run workflow**) or when a tag like `v1.0.0` is pushed | Builds installers on Windows, macOS (Apple Silicon + Intel) and Linux, uploads them as **artifacts**, and, only if **publish** is ticked or a version tag was pushed, creates the GitHub Release `v<version>` with the installers and `.github/release-notes.md`. Versions starting with `0.` are marked pre-release |
 
 ## What each system gets
 | System | Files | Notes |
@@ -37,8 +37,8 @@ workaround in plain words. Never ask people to turn off their system's security 
 1. Pre-release checklist below passes.
 2. Update the version in **three** places: `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `VERSION` in `ui/app.js` ([Versioning](versioning.md)).
 3. Add the `CHANGELOG.md` section. Commit.
-4. Tag and push: `git tag -a v1.0.0 -m "Pebble 1.0.0"` then `git push --tags`. The build workflow runs.
-5. **With the maintainer's explicit approval only:** create a GitHub Release from the tag, attach the installers from the workflow artifacts, paste the changelog section.
+4. **With the maintainer's explicit approval only:** run **Build installers** with **publish** ticked (or push a tag `v1.0.0`). The workflow builds all installers and creates the release `v<version>` with them attached.
+5. Check the release page: every system's file is there and downloads.
 
 ## Pre-release checklist
 - [ ] [Manual checklist](../05-testing/manual-checklist.md) passed on **each** system (Windows, macOS, Linux)
