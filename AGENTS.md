@@ -1,74 +1,63 @@
-# AGENTS.md — Pebble (working name; formerly "Worry Ledger")
+# AGENTS.md: Pebble
 
-Instructions and context for any AI agent working on this project.
+Instructions **and project memory** for any AI agent (Claude Code or others) working on Pebble.
+This file is the persistent memory for the project: decisions, agreements and context live
+here, not in tool-specific files. Read it fully before doing anything.
 
-**Source of truth: [docs/HANDBOOK.md](docs/HANDBOOK.md).** Read §1 Principles, §5.4 Calm Design
-System, and §7.3 Calm Audit before changing anything. Design tokens live in `design/preview.html`.
-The maintainer is new to coding: explain every change in plain language before making it,
-keep changes small, and never add dependencies, analytics or network requests without asking.
+## 1. What Pebble is
+A calm, private, open-source web app for overthinkers. The user writes a worry in one line, picks
+a check-back date, and on that day answers "Did it happen?". Over time they build a private record
+of how often their worries came true. Based on the Worry Outcome Journal (LaFreniere & Newman, 2020).
+Positioning: **"A prediction tracker for overthinkers. Your brain makes forecasts; this keeps score."**
 
-## What it is
-An open-source, local-first journal for overthinkers. You write as usual. The app
-pulls out the worries and predictions in your entries ("I think the interview will go
-badly"), asks you on a set date "Did this happen?", and over months builds a
-personal record of how often your fears actually came true, broken down by topic
-(work, health, people, money...).
+## 2. The handbook is the law
+**Source of truth: [docs/handbook/README.md](docs/handbook/README.md).** One page per topic, grouped by SDLC phase.
+- Before any work, read the handbook pages for that phase (the [build plan](docs/handbook/04-implementation/build-plan.md) links them).
+- Every change must satisfy: [Principles](docs/handbook/00-foundation/principles.md) → [Definition of Done](docs/handbook/01-planning/process-model.md#definition-of-done-before-it-counts-as-finished) → [Calm Audit](docs/handbook/05-testing/calm-audit.md).
+- If code and handbook disagree, update one of them **in the same commit**.
+- New psychological features need a [Science](docs/handbook/00-foundation/science.md) entry first.
 
-One-line pitch: **"Your journal remembers what you were afraid of — and checks back."**
+## 3. Working agreements (standing instructions from the maintainer)
+1. **Auto-push docs.** After writing or changing the handbook or any documentation, commit and push to `origin main` immediately. Don't wait to be asked.
+2. **Code changes:** explain what and why in plain language first; keep each change small; push once the maintainer has seen it working.
+3. **The maintainer is new to coding.** Teach as you go: explain each step and avoid jargon (or link the [Glossary](docs/handbook/00-foundation/glossary.md)).
+4. **Be a devil's advocate mentor.** Be honest, evidence-based, no sugarcoating; challenge weak ideas with facts. Be decisive: give one recommendation, not ten options.
+5. **Project memory lives here** in AGENTS.md. Update §6 (Decision log) when significant decisions are made.
+6. **No personal information** about the maintainer in this repo. Project facts only.
+7. **Public-facing actions need explicit approval every time:** making the repo public, publishing releases, posting anywhere.
+8. **Never** add dependencies, analytics, external fonts or network requests without an ADR and approval.
 
-## Why it should exist (evidence)
-- Worry Outcome Journal method: LaFreniere & Newman (2020), *Behavior Therapy* 51(3), 413–423.
-  91.4% of tracked worries did not come true; people with more untrue worries saw larger
-  symptom drops. Caveat: 29 participants with diagnosed GAD, 30-day follow-up. Do NOT
-  market it as "91% of everyone's worries never happen."
-- Journaling apps lose most users fast; common reasons are the blank page, slow invisible
-  payoff, and entries that pile up unread. This design gives a visible payoff (your own
-  accuracy record) and a reason to look back (check-backs).
+## 4. Technical facts for agents
+| Fact | Detail |
+|---|---|
+| Repo | `itsharshhy/pebble` (**private**) |
+| Default branch | `main` |
+| GitHub CLI on Windows | `C:\Program Files\GitHub CLI\gh.exe` (may not be on PATH in agent shells) |
+| Commit identity | Repo-local config; GitHub **noreply** email. Never use a personal email. |
+| Long paths | `git config core.longpaths true` is set (the app's working folder has very long paths) |
+| Commit style | Conventional Commits (`feat:`, `fix:`, `docs:`…) |
+| Local preview | `python -m http.server 5317 --bind 127.0.0.1` from the repo root |
+| Stack | Plain HTML/CSS/JS, no build, no dependencies ([ADR-001](docs/handbook/03-design/decisions.md)) |
+| Design tokens | [Design system](docs/handbook/03-design/design-system.md); living preview in `design/preview.html` |
+| Hosting caveat | GitHub Pages on a private repo needs a paid plan ([Deployment](docs/handbook/06-release/deployment.md)) |
 
-## Market gap (researched 2026-10-13)
-| Existing | What it does | Gap |
+## 5. Current status
+- **Phase:** Loop 0 done (repo + handbook + design preview). Next: v0 14-day paper test by the maintainer, then Loop 1 (static Today screen).
+- **Open decisions:** final name ("Pebble" is a working name); when to go public.
+
+## 6. Decision log
+| Date | Decision | Why |
 |---|---|---|
-| Pragma, Worry Watch, Scribble (iOS/Android) | Worry → check outcome later | Closed source, phone-only, separate form not your journal |
-| sinameraji/decision-journal-electron, decision-diary, muse | Decision → review outcome | About decisions, not fears; macOS/Android only |
-| Memex, Lotti, ai-journal, Rosebud | AI summarizes & finds patterns | Tells you what you felt, never checks if fears were right |
-| Joplin, Logseq, jrnl, Memos, StoryPad | Write & store | No follow-up loop at all |
+| 2026-10-13 | Project idea: worry outcome tracking, open source, local-first | Closed-source apps (Pragma, Worry Watch) exist; open-source decision journals exist but don't track worries; evidence from LaFreniere & Newman 2020 |
+| 2026-10-13 | Repositioned from "worry journal" to "prediction tracker for overthinkers" | Critique: avoidant users fear revisiting worries. Check-backs show one line only; "Let it go"; no guilt |
+| 2026-10-13 | Working name "Pebble" | Metaphor: setting down a pebble you've carried; drives calm visuals and copy |
+| 2026-10-13 | Repo created private at itsharshhy/pebble | Maintainer decides on going public later |
+| 2026-10-13 | `--sage-deep` (#56705F) added for primary buttons | White on `--sage` measured 2.55:1 (fails WCAG); white on sage-deep is 5.41:1 |
+| 2026-10-13 | Handbook split into one page per topic per SDLC phase (v2.0) | Maintainer request: every aspect gets its own deep page; agents follow it literally |
+| 2026-10-13 | Docs auto-pushed after every change; project memory kept in AGENTS.md | Maintainer standing instruction |
 
-Honest position: the core loop is not new (it's a published CBT exercise). The new part is the
-combination: open source + local-first + works on your normal free-form journal + long-term
-personal calibration record. Novelty is in execution, not the concept.
-
-## Positioning (revised 2026-10-13 after critique)
-Do NOT market as a "worry journal" — that framing scares off the avoidant users it targets.
-Position as: **"A prediction tracker for overthinkers. Your brain makes forecasts; this keeps score."**
-Audience: everyday non-clinical overthinkers, privacy-conscious journalers, therapy clients
-assigned worry logs as CBT homework. Not for people in acute crisis.
-
-Risks the design must answer (evidence):
-- Venting-only writing can maintain rumination; one COVID-era trial found expressive writing raised stress.
-- Writing soon after trauma/major upheaval may do harm.
-- Self-guided anxiety apps have small average effects (g ≈ 0.20, Linardon 2024, 176 RCTs). Don't overpromise.
-- Avoidance: only ~41% of people with anxiety disorders recognize a need for care (Alonso 2018).
-
-## Design rules (non-negotiable)
-1. Check-backs show one short line, never the full original entry. No re-reading.
-2. User chooses what is tracked; nothing auto-extracted without consent.
-3. "Let it go" button: archive a worry without answering; never asked again.
-4. No streaks, no guilt messages, no "you missed X days".
-5. Every flow ends in a next step (coping / problem-solving), not pure venting.
-6. Visible "not a medical tool / not for crisis" notice with link to professional help.
-
-## Build plan (beginner-friendly)
-- **v0 (no code, week 1):** Markdown/spreadsheet template. Founder uses it personally for 2–4 weeks.
-  If they don't use it, stop or change the idea.
-- **v1 (single file):** One `index.html` with plain HTML/CSS/JavaScript. Data in browser
-  `localStorage` + export/import JSON. No server, no accounts, no tracking. Host free on GitHub Pages.
-  Features: write entry → mark sentences as worries → set check date → "Due today" list →
-  answer Happened / Didn't / Better than feared / Worse → stats page.
-- **v2 (optional):** Bring-your-own-key AI that suggests which sentences are worries. Off by default.
-  Entries never leave the device without explicit opt-in.
-
-## Rules for agents
-- Privacy first: no analytics, no telemetry, no backend in v1.
-- Keep code simple enough for a beginner to read; comment the *why*.
-- Not a medical tool. README must say so and point to professional help for anxiety disorders.
-- License: MIT (simple, permissive).
+## 7. Research summary (details in the handbook's Science page)
+- Worry Outcome Journal: 91.4% of tracked worries didn't come true (n = 29, GAD; small sample, **don't generalise**).
+- Self-guided mental-health apps have small effects (anxiety g ≈ 0.20, 176 RCTs), so claims stay humble.
+- Venting-only writing can maintain rumination, so every flow ends in a step forward.
+- Market gap (2026-10): closest apps are closed-source iOS; open-source journals don't do outcome tracking.

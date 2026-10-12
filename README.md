@@ -11,7 +11,7 @@ your mind's forecasts came true.
 ## Why Pebble is different
 - **Private:** no account, no server, no tracking. Your words never leave your device.
 - **Calm:** no streaks, no badges, no red, no "you missed 5 days". Ever.
-- **Evidence-based:** every feature cites its research and how strong that research is. See the [Handbook](docs/HANDBOOK.md#2-the-science).
+- **Evidence-based:** every feature cites its research and how strong that research is. See the [Science page](docs/handbook/00-foundation/science.md).
 - **Free and open source** (MIT).
 
 ## Status
@@ -23,4 +23,4 @@ please reach out to a professional, or find a helpline at [findahelpline.com](ht
 India: Tele-MANAS **14416**.
 
 ## Contributing
-Read the [Handbook](docs/HANDBOOK.md). Every change must pass the **Calm Audit** (§7.3).
+Read the [Handbook](docs/handbook/README.md). Every change must pass the [Calm Audit](docs/handbook/05-testing/calm-audit.md).
