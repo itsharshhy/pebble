@@ -58,7 +58,7 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 
 ## 5. Current status (update at the end of every session)
 - **Done:** Loop 0 (handbook). Handbook v3.0 rewritten for the desktop app (2026-10-12). Pebble 0.1.0 built: all v1 screens (U1–U9, U13, U14), Tauri 2 shell with atomic file storage, native export/import dialogs, warm premium visual pass with dusk-pond illustrations, CI and installer workflows. Verified on Linux: 24 JS unit tests (4 timezones), 7 Rust tests, clippy and fmt clean, 70 end-to-end browser checks, a release build (`.deb`/`.rpm` 2.45 MB), and the real app saving and reloading `pebble.json`.
-- **Released:** v0.1.0 pre-release, 2026-10-12, with installers for Windows, macOS (universal) and Linux built by `build.yml` (all three jobs green): https://github.com/itsharshhy/pebble/releases/tag/v0.1.0
+- **Released:** v0.1.1 (fixes the Mac "damaged" error); v0.1.0 pre-release, 2026-10-12, with installers for Windows, macOS (universal) and Linux built by `build.yml` (all three jobs green): https://github.com/itsharshhy/pebble/releases/tag/v0.1.0
 - **Next:** run the [manual checklist](docs/handbook/05-testing/manual-checklist.md) on Windows and macOS (never tested there yet); Calm Audit records per screen; then usability tests (Build plan loops 7–8).
 - **Open decisions:** final name ("Pebble" is a working name); code signing budget (risk R11); when to go public and publish a release (needs explicit approval).
 - **Not verified yet:** the Windows and macOS apps on real machines (they build; nobody has run them yet), screen readers inside the app, Lighthouse score.
@@ -88,6 +88,7 @@ Nothing from earlier local sessions exists there. **This file and the handbook a
 | 2026-10-12 | Built in parallel with v0 instead of after it | Maintainer's explicit choice; the app can itself serve as the v0 tool |
 | 2026-10-12 | Interface keeps a browser-preview fallback (ADR-014) | Instant previews and automated tests without a desktop build |
 | 2026-10-12 | Maintainer approved publishing release v0.1.0 (pre-release) with installers for all systems | Maintainer asked: "release the build and give me the link". Repo stays private; going public is still a separate decision |
+| 2026-10-12 | v0.1.1: macOS ad-hoc signing always on; detailed unsigned-app steps in release notes | v0.1.0's Mac app had no signature at all, which Apple Silicon reports as "damaged"; maintainer reported download/open errors on Windows and Mac |
 
 ## 7. Research summary (details in the handbook's Science page)
 - Worry Outcome Journal: 91.4% of tracked worries didn't come true (n = 29, GAD; small sample, **don't generalise**).

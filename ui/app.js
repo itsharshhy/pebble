@@ -15,7 +15,7 @@ import { showBreath, showCheckBack, leaveCheckBack, setupCheckBack }
 import { renderGarden } from './js/views/garden.js';
 import { renderSettings, renderAbout, setupSettings } from './js/views/settings.js';
 
-export const VERSION = '0.1.0'; // single source for the version (Versioning)
+export const VERSION = '0.1.1'; // single source for the version (Versioning)
 
 const SCREEN_TITLES = {
   welcome: STRINGS.titleWelcome, today: STRINGS.titleToday, new: STRINGS.titleNew,

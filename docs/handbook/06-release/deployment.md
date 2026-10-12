@@ -6,7 +6,7 @@ An installer must be built **on** the system it's for, so GitHub Actions rents o
 | Workflow | Runs when | Does |
 |---|---|---|
 | `.github/workflows/ci.yml` | Every push and pull request | JavaScript tests, Rust tests, `clippy`, `rustfmt` on Linux |
-| `.github/workflows/build.yml` | By hand (**Actions → Build installers → Run workflow**) or when a tag like `v1.0.0` is pushed | Builds installers on Windows, macOS (Apple Silicon + Intel) and Linux, uploads them as **artifacts**, and, only if **publish** is ticked or a version tag was pushed, creates the GitHub Release `v<version>` with the installers and `.github/release-notes.md`. Versions starting with `0.` are marked pre-release |
+| `.github/workflows/build.yml` | By hand (**Actions → Build installers → Run workflow**) or when a tag like `v1.0.0` is pushed | Builds installers on Windows, macOS (Apple Silicon + Intel) and Linux, uploads them as **artifacts**, and, only if **publish** is ticked or a version tag was pushed, creates the GitHub Release `v<version>` with the installers and `.github/release-notes.md`. Marked as the latest release so https://github.com/itsharshhy/pebble/releases/latest always works |
 
 ## What each system gets
 | System | Files | Notes |
@@ -26,11 +26,15 @@ Artifacts are visible only to people with access to the repo and are kept 30 day
 Unsigned apps work, but the systems warn people the first time:
 | System | What people see | Workaround | Proper fix |
 |---|---|---|---|
-| macOS | "Pebble can't be opened because Apple cannot check it" | Right-click the app → **Open** → **Open** | Apple Developer Program (about USD 99/year) + notarisation |
+| macOS | "Apple could not verify Pebble…" | System Settings → Privacy & Security → **Open Anyway** (or `xattr -cr /Applications/Pebble.app`) | Apple Developer Program (about USD 99/year) + notarisation |
 | Windows | SmartScreen: "Windows protected your PC" | **More info** → **Run anyway** | A code-signing certificate (yearly cost) |
 | Linux | No warning | — | — |
 
-Signing is a **maintainer decision with a cost** (risk R11). Until then, the README explains the
+**Ad-hoc signing is always on** (`bundle.macOS.signingIdentity: "-"` in `tauri.conf.json`). Without any signature, Apple Silicon Macs report the app as **"damaged"** with no way to open it (found in v0.1.0, fixed in v0.1.1). Ad-hoc signing is free; it doesn't remove the warning, but it makes "Open Anyway" possible.
+
+Browsers may also block unsigned downloads (Edge "isn't commonly downloaded", Chrome "suspicious download"). `.github/release-notes.md` explains each screen step by step.
+
+Real signing is a **maintainer decision with a cost** (risk R11). Until then, the README explains the
 workaround in plain words. Never ask people to turn off their system's security entirely.
 
 ## Releasing a version (public-facing: needs approval every time)
